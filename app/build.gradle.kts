@@ -45,6 +45,7 @@ android {
 
 
 dependencies {
+
     api(platform(project(":depconstraints")))
     kapt(platform(project(":depconstraints")))
     androidTestApi(platform(project(":depconstraints")))
