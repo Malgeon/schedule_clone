@@ -8,13 +8,13 @@ plugins {
 
 
 android {
-    compileSdk = Versions.compileSdk
+    compileSdk = Versions.COMPILE_SDK
 
     defaultConfig {
         applicationId = "com.example.schedule_clone"
-        minSdk = Versions.minSdk
-        targetSdk = Versions.targetSdk
-        versionCode = Versions.versionCode
+        minSdk = Versions.MIN_SDK
+        targetSdk = Versions.TARGET_SDK
+        versionCode = Versions.versionCodeMobile
         versionName = Versions.versionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -44,7 +44,11 @@ android {
 }
 
 
-dependencie
+dependencies {
+    api(platform(project(":depconstraints")))
+    kapt(platform(project(":depconstraints")))
+    androidTestApi(platform(project(":depconstraints")))
+
     implementation("androidx.core:core-ktx:1.7.0")
     implementation("androidx.appcompat:appcompat:1.4.1")
     implementation("com.google.android.material:material:1.5.0")
