@@ -3,7 +3,6 @@ plugins {
     kotlin("android")
     kotlin("kapt")
     id("dagger.hilt.android.plugin")
-    id("androidx.navigation.safeargs.kotlin")
 }
 
 
@@ -43,13 +42,13 @@ android {
     }
 }
 
+kapt {
+    arguments {
+        arg("dagger.hilt.shareTestComponents", "true")
+    }
+}
 
 dependencies {
-
-    api(platform(project(":depconstraints")))
-    kapt(platform(project(":depconstraints")))
-    androidTestApi(platform(project(":depconstraints")))
-
     implementation("androidx.core:core-ktx:1.7.0")
     implementation("androidx.appcompat:appcompat:1.4.1")
     implementation("com.google.android.material:material:1.5.0")
@@ -63,6 +62,11 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2")
 
+    // Dagger Hilt
+    implementation(Libs.HILT_ANDROID)
+    androidTestImplementation(Libs.HILT_TESTING)
+    kapt(Libs.HILT_COMPILER)
+    kaptAndroidTest(Libs.HILT_COMPILER)
 
     testImplementation("junit:junit:4.+")
     androidTestImplementation("androidx.test.ext:junit:1.1.3")
