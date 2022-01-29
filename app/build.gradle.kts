@@ -1,8 +1,11 @@
+import kotlin.reflect.full.memberFunctions
+
 plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("kapt")
     id("dagger.hilt.android.plugin")
+    id("androidx.navigation.safeargs.kotlin")
 }
 
 
@@ -17,13 +20,6 @@ android {
         versionName = Versions.versionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
-
-    buildTypes {
-        getByName("release") {
-            isMinifyEnabled = true
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-        }
     }
 
     buildFeatures {
@@ -42,25 +38,26 @@ android {
     }
 }
 
-kapt {
-    arguments {
-        arg("dagger.hilt.shareTestComponents", "true")
-    }
-}
-
 dependencies {
-    implementation("androidx.core:core-ktx:1.7.0")
-    implementation("androidx.appcompat:appcompat:1.4.1")
-    implementation("com.google.android.material:material:1.5.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.3")
-    implementation("androidx.legacy:legacy-support-v4:1.0.0")
+    api(platform(project(":depconstraints")))
+    kapt(platform(project(":depconstraints")))
+    androidTestApi(platform(project(":depconstraints")))
 
-    implementation("androidx.fragment:fragment-ktx:1.4.1")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.4.0")
-    implementation("androidx.navigation:navigation-ui-ktx:2.4.0")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2")
+    implementation(project(":presentation"))
+
+    implementation(Libs.CORE_KTX)
+    implementation(Libs.APP_STARTUP)
+
+    // UI
+    implementation(Libs.ACTIVITY_KTX)
+    implementation(Libs.APPCOMPAT)
+    implementation(Libs.FRAGMENT_KTX)
+    implementation(Libs.CONSTRAINT_LAYOUT)
+    implementation(Libs.MATERIAL)
+
+    implementation(Libs.NAVIGATION_FRAGMENT_KTX)
+    implementation(Libs.NAVIGATION_UI_KTX)
 
     // Dagger Hilt
     implementation(Libs.HILT_ANDROID)

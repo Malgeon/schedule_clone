@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.application")
+    id("com.android.library")
     kotlin("android")
     kotlin("kapt")
     id("androidx.navigation.safeargs.kotlin")
@@ -8,7 +8,12 @@ plugins {
 
 
 android {
+    compileSdk = Versions.COMPILE_SDK
 
+    defaultConfig {
+        minSdk = Versions.MIN_SDK
+        targetSdk = Versions.TARGET_SDK
+    }
 
 }
 
@@ -19,19 +24,29 @@ kapt {
 }
 
 dependencies {
+    api(platform(project(":depconstraints")))
+    kapt(platform(project(":depconstraints")))
+    androidTestApi(platform(project(":depconstraints")))
 
-    implementation("androidx.core:core-ktx:1.7.0")
-    implementation("androidx.appcompat:appcompat:1.4.1")
-    implementation("com.google.android.material:material:1.5.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.3")
-    implementation("androidx.legacy:legacy-support-v4:1.0.0")
+    implementation(Libs.CORE_KTX)
+    implementation(Libs.APP_STARTUP)
 
-    implementation("androidx.fragment:fragment-ktx:1.4.0")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.3.5")
-    implementation("androidx.navigation:navigation-ui-ktx:2.3.5")
+    implementation(Libs.ACTIVITY_KTX)
+    implementation(Libs.APPCOMPAT)
+    implementation(Libs.FRAGMENT_KTX)
+    implementation(Libs.CARDVIEW)
+    implementation(Libs.BROWSER)
+    implementation(Libs.CONSTRAINT_LAYOUT)
+    implementation(Libs.DRAWER_LAYOUT)
+    implementation(Libs.MATERIAL)
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2")
+
+    // Architecture Components
+    implementation(Libs.LIFECYCLE_LIVE_DATA_KTX)
+    implementation(Libs.LIFECYCLE_RUNTIME_KTX)
+    kapt(Libs.LIFECYCLE_COMPILER)
+    implementation(Libs.NAVIGATION_FRAGMENT_KTX)
+    implementation(Libs.NAVIGATION_UI_KTX)
 
     // Dagger Hilt
     implementation(Libs.HILT_ANDROID)
