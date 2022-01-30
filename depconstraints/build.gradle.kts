@@ -104,7 +104,7 @@ dependencies {
         api("${Libs.HILT_TESTING}:$hilt")
         api("${Libs.JUNIT}:$junit")
         api("${Libs.EXT_JUNIT}:$junitExt")
-//        api("${Libs.KOTLIN_STDLIB}:${Versions.KOTLIN}")
+        api("${Libs.KOTLIN_STDLIB}:${Versions.KOTLIN}")
 //        api("${Libs.LIFECYCLE_COMPILER}:$lifecycle")
         api("${Libs.LIFECYCLE_LIVE_DATA_KTX}:$lifecycle")
 //        api("${Libs.LIFECYCLE_VIEW_MODEL_KTX}:$lifecycle")
