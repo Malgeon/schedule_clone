@@ -106,7 +106,7 @@ dependencies {
         api("${Libs.EXT_JUNIT}:$junitExt")
 //        api("${Libs.KOTLIN_STDLIB}:${Versions.KOTLIN}")
 //        api("${Libs.LIFECYCLE_COMPILER}:$lifecycle")
-//        api("${Libs.LIFECYCLE_LIVE_DATA_KTX}:$lifecycle")
+        api("${Libs.LIFECYCLE_LIVE_DATA_KTX}:$lifecycle")
 //        api("${Libs.LIFECYCLE_VIEW_MODEL_KTX}:$lifecycle")
 //        api("${Libs.LIFECYCLE_RUNTIME_KTX}:$lifecycle")
 //        api("${Libs.MOCKITO_KOTLIN}:$mockitoKotlin")
