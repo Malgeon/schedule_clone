@@ -15,6 +15,21 @@ android {
         targetSdk = Versions.TARGET_SDK
     }
 
+    buildFeatures {
+        viewBinding = true
+        dataBinding = true
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        val options = this as org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
+        options.jvmTarget = "1.8"
+    }
+
 }
 
 kapt {
