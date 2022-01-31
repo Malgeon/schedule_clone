@@ -45,6 +45,7 @@ dependencies {
 
 
     implementation(project(":presentation"))
+    implementation(project(":shared"))
 
     implementation(Libs.CORE_KTX)
     implementation(Libs.APP_STARTUP)
