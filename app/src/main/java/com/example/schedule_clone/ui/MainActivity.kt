@@ -3,6 +3,8 @@ package com.example.schedule_clone.ui
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
 import com.example.schedule_clone.R
 import com.example.schedule_clone.databinding.ActivityMainBinding
 import com.example.schedule_clone.presentation.MainActivityViewModel
@@ -32,9 +34,11 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-
     private val viewModel: MainActivityViewModel by viewModels()
     private lateinit var binding: ActivityMainBinding
+    private lateinit var navController: NavController
+    private lateinit var navHostFragment: NavHostFragment
+    private var currentNavId = NAV_ID_NONE
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

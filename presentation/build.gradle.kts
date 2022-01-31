@@ -45,6 +45,7 @@ dependencies {
     androidTestApi(platform(project(":depconstraints")))
 
     implementation(project(":shared"))
+    implementation(project(":model"))
 
     implementation(Libs.CORE_KTX)
     implementation(Libs.APP_STARTUP)
