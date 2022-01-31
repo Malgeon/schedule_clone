@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2018 Google LLC
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -389,4 +388,6 @@
     <string name="codelabs_website" translation_description="Text of a button that launches the Codelabs website.">Codelabs website</string>
     <string name="codelab_duration" translation_description="Text showing the approximate time in minutes that a user would spend during a codelab tutorial. Abbreviated.">Duration: %1$d min</string>
     <string name="start_codelab" translation_description="Text of a button that allows a user to start a codelab tutorial.">Start codelab</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
