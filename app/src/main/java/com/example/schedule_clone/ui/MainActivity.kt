@@ -1,17 +1,21 @@
 package com.example.schedule_clone.ui
 
+import android.net.ConnectivityManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import androidx.activity.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupWithNavController
 import com.example.schedule_clone.R
 import com.example.schedule_clone.databinding.ActivityMainBinding
 import com.example.schedule_clone.shared.di.CodelabsEnabledFlag
 import com.example.schedule_clone.shared.di.ExploreArEnabledFlag
 import com.example.schedule_clone.shared.di.MapFeatureEnabledFlag
 import com.example.schedule_clone.presentation.MainActivityViewModel
+import com.example.schedule_clone.presentation.setupWithNavController
 import com.example.schedule_clone.presentation.util.HeightTopWindowInsetsListener
 
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,6 +43,9 @@ class MainActivity : AppCompatActivity() {
             com.example.schedule_clone.presentation.R.id.navigation_settings,
         )
     }
+
+    @Inject
+    lateinit var connectivityManager: ConnectivityManager
 
     @Inject
     @JvmField
@@ -103,23 +110,23 @@ class MainActivity : AppCompatActivity() {
             // by the nav graph. We want to launch a new Activity for only the AR menu item.
             isVisible = exploreArFeatureEnabled
             setOnMenuItemClickListener {
-                if (connectivityManager.activeNetworkInfo?.isConnected == true) {
-                    if (viewModel.arCoreAvailability.value?.isSupported == true) {
-                        analyticsHelper.logUiEvent(
-                            "Navigate to Explore I/O ARCore supported",
-                            AnalyticsActions.CLICK
-                        )
-                        openExploreAr()
-                    } else {
-                        analyticsHelper.logUiEvent(
-                            "Navigate to Explore I/O ARCore NOT supported",
-                            AnalyticsActions.CLICK
-                        )
-                        openArCoreNotSupported()
-                    }
-                } else {
-                    openNoConnection()
-                }
+//                if (connectivityManager.activeNetworkInfo?.isConnected == true) {
+//                    if (viewModel.arCoreAvailability.value?.isSupported == true) {
+//                        analyticsHelper.logUiEvent(
+//                            "Navigate to Explore I/O ARCore supported",
+//                            AnalyticsActions.CLICK
+//                        )
+//                        openExploreAr()
+//                    } else {
+//                        analyticsHelper.logUiEvent(
+//                            "Navigate to Explore I/O ARCore NOT supported",
+//                            AnalyticsActions.CLICK
+//                        )
+//                        openArCoreNotSupported()
+//                    }
+//                } else {
+//                    openNoConnection()
+//                }
                 true
             }
         }
