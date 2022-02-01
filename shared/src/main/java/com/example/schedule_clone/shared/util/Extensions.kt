@@ -27,6 +27,7 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
+import com.example.schedule_clone.shared.BuildConfig
 import com.google.android.gms.tasks.Task
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.SendChannel
