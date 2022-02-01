@@ -2,14 +2,17 @@ package com.example.schedule_clone.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
 import androidx.activity.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.schedule_clone.R
 import com.example.schedule_clone.databinding.ActivityMainBinding
 import com.example.schedule_clone.presentation.MainActivityViewModel
+import com.example.schedule_clone.presentation.util.HeightTopWindowInsetsListener
 
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -34,6 +37,21 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
+    @Inject
+    @JvmField
+    @MapFeatureEnabledFlag
+    var mapFeatureEnabled: Boolean = false
+
+    @Inject
+    @JvmField
+    @CodelabsEnabledFlag
+    var codelabsFeatureEnabled: Boolean = false
+
+    @Inject
+    @JvmField
+    @ExploreArEnabledFlag
+    var exploreArFeatureEnabled: Boolean = false
+
     private val viewModel: MainActivityViewModel by viewModels()
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
@@ -45,5 +63,62 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+        binding.statusBarScrim.setOnApplyWindowInsetsListener(HeightTopWindowInsetsListener)
+
+        navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+
+
+        navController = navHostFragment.navController
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            currentNavId = destination.id
+            // TODO: hide nav if not a top-level destination?
+        }
+
+
+        // Either of two different navigation views might exist depending on the configuration.
+        binding.bottomNavigation?.apply {
+            configureNavMenu(menu)
+            setupWithNavController(navController)
+            setOnItemReselectedListener { } // prevent navigating to the same item
+        }
+        binding.navigationRail?.apply {
+            configureNavMenu(menu)
+            setupWithNavController(navController)
+            setOnItemReselectedListener { } // prevent navigating to the same item
+        }
+
+    }
+
+
+    private fun configureNavMenu(menu: Menu) {
+        menu.findItem(com.example.schedule_clone.presentation.R.id.navigation_map)?.isVisible = mapFeatureEnabled
+        menu.findItem(com.example.schedule_clone.presentation.R.id.navigation_codelabs)?.isVisible = codelabsFeatureEnabled
+        menu.findItem(com.example.schedule_clone.presentation.R.id.navigation_explore_ar)?.apply {
+            // Handle launching new activities, otherwise assume the destination is handled
+            // by the nav graph. We want to launch a new Activity for only the AR menu item.
+            isVisible = exploreArFeatureEnabled
+            setOnMenuItemClickListener {
+                if (connectivityManager.activeNetworkInfo?.isConnected == true) {
+                    if (viewModel.arCoreAvailability.value?.isSupported == true) {
+                        analyticsHelper.logUiEvent(
+                            "Navigate to Explore I/O ARCore supported",
+                            AnalyticsActions.CLICK
+                        )
+                        openExploreAr()
+                    } else {
+                        analyticsHelper.logUiEvent(
+                            "Navigate to Explore I/O ARCore NOT supported",
+                            AnalyticsActions.CLICK
+                        )
+                        openArCoreNotSupported()
+                    }
+                } else {
+                    openNoConnection()
+                }
+                true
+            }
+        }
     }
 }
