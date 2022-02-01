@@ -2,11 +2,18 @@ package com.example.schedule_clone.di
 
 import android.content.Context
 import android.net.ConnectivityManager
+import com.example.schedule_clone.shared.di.ApplicationScope
+import com.example.schedule_clone.shared.di.DefaultDispatcher
+import com.example.schedule_clone.shared.di.MainThreadHandler
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
+import javax.inject.Singleton
 
 /**
  * Defines all the classes that need to be provided in the scope of the app.
@@ -22,4 +29,19 @@ class AppModule {
     fun provideConnectivityManager(@ApplicationContext context: Context): ConnectivityManager =
         context.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE)
                 as ConnectivityManager
+
+
+
+    @ApplicationScope
+    @Singleton
+    @Provides
+    fun providesApplicationScope(
+        @DefaultDispatcher defaultDispatcher: CoroutineDispatcher
+    ): CoroutineScope = CoroutineScope(SupervisorJob() + defaultDispatcher)
+
+//    @Singleton
+//    @Provides
+//    @MainThreadHandler
+//    fun provideMainThreadHandler(): IOSchedHandler = IOSchedMainHandler()
+
 }
