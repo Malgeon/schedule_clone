@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.schedule_clone.model.shared.util
+package com.example.schedule_clone.shared.util
 
 import android.content.Context
 import android.content.Context.CONNECTIVITY_SERVICE

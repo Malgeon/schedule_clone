@@ -1,6 +1,7 @@
 package com.example.schedule_clone.model.userdata
 
-import com.google.samples.apps.iosched.model.SessionId
+
+import com.example.schedule_clone.model.SessionId
 import com.example.schedule_clone.model.reservations.ReservationRequest
 import com.example.schedule_clone.model.reservations.ReservationRequest.ReservationRequestEntityAction.CANCEL_REQUESTED
 import com.example.schedule_clone.model.reservations.ReservationRequest.ReservationRequestEntityAction.RESERVE_REQUESTED

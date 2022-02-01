@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.example.schedule_clone.model.shared.config
+package com.example.schedule_clone.shared.config
 
 import android.content.res.Resources.NotFoundException
 import com.example.schedule_clone.model.ConferenceWifiInfo
-import com.example.schedule_clone.model.shared.di.IoDispatcher
+import com.example.schedule_clone.shared.di.IoDispatcher
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import kotlinx.coroutines.CoroutineDispatcher

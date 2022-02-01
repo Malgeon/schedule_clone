@@ -1,9 +1,9 @@
 package com.example.schedule_clone.di
 
-import com.example.schedule_clone.model.shared.di.DefaultDispatcher
-import com.example.schedule_clone.model.shared.di.IoDispatcher
-import com.example.schedule_clone.model.shared.di.MainDispatcher
-import com.example.schedule_clone.model.shared.di.MainImmediateDispatcher
+import com.example.schedule_clone.shared.di.DefaultDispatcher
+import com.example.schedule_clone.shared.di.IoDispatcher
+import com.example.schedule_clone.shared.di.MainDispatcher
+import com.example.schedule_clone.shared.di.MainImmediateDispatcher
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

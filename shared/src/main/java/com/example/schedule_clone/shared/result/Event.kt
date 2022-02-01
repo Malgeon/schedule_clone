@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.schedule_clone.model.shared.result
+package com.example.schedule_clone.shared.result
 
 import androidx.lifecycle.Observer
 

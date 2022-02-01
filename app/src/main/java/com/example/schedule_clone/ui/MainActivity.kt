@@ -8,9 +8,9 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.schedule_clone.R
 import com.example.schedule_clone.databinding.ActivityMainBinding
-import com.example.schedule_clone.model.shared.di.CodelabsEnabledFlag
-import com.example.schedule_clone.model.shared.di.ExploreArEnabledFlag
-import com.example.schedule_clone.model.shared.di.MapFeatureEnabledFlag
+import com.example.schedule_clone.shared.di.CodelabsEnabledFlag
+import com.example.schedule_clone.shared.di.ExploreArEnabledFlag
+import com.example.schedule_clone.shared.di.MapFeatureEnabledFlag
 import com.example.schedule_clone.presentation.MainActivityViewModel
 import com.example.schedule_clone.presentation.util.HeightTopWindowInsetsListener
 

@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.example.schedule_clone.model.shared.util
+package com.example.schedule_clone.shared.util
 
 import androidx.annotation.StringRes
 import com.example.schedule_clone.model.ConferenceDay
 import com.example.schedule_clone.model.Session
-import fake.`package`.name.`for`.sync.R
-
+import com.example.schedule_clone.shared.BuildConfig
+import com.example.schedule_clone.shared.R
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter

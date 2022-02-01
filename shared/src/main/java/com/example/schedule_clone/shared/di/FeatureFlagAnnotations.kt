@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.schedule_clone.model.shared.di
+package com.example.schedule_clone.shared.di
 
 import javax.inject.Qualifier
 

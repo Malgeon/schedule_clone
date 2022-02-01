@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.example.schedule_clone.model.shared.di
+package com.example.schedule_clone.shared.di
 
-import com.example.schedule_clone.model.shared.config.AppConfigDataSource
+import com.example.schedule_clone.shared.config.AppConfigDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

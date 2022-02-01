@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.schedule_clone.model.shared.config
+package com.example.schedule_clone.shared.config
 
 import com.example.schedule_clone.model.ConferenceWifiInfo
 

@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.example.schedule_clone.model.shared.result
+package com.example.schedule_clone.shared.result
 
 import androidx.lifecycle.MutableLiveData
-import com.example.schedule_clone.model.shared.result.Result.Success
+import com.example.schedule_clone.shared.result.Result.Success
 import kotlinx.coroutines.flow.MutableStateFlow
 
 /**
