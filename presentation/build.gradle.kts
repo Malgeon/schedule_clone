@@ -40,10 +40,10 @@ kapt {
 
 dependencies {
     api(platform(project(":depconstraints")))
-    implementation("androidx.legacy:legacy-support-v4:1.0.0")
     kapt(platform(project(":depconstraints")))
     androidTestApi(platform(project(":depconstraints")))
 
+    implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation(project(":shared"))
     implementation(project(":model"))
 
