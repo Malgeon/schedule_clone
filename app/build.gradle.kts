@@ -73,3 +73,6 @@ dependencies {
 //    implementation(Libs.Dagger.hiltAndroid)
 //    kapt(Libs.Dagger.hiltCompiler)
 }
+
+apply(plugin = "com.google.gms.google-services")
+
