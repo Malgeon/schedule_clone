@@ -2,6 +2,7 @@ include(
     "depconstraints",
     ":shared",
     ":presentation",
+    ":data",
     ":domain",
     ":model",
     ":app"
