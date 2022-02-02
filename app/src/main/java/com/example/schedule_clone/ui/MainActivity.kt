@@ -44,8 +44,6 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    @Inject
-    lateinit var connectivityManager: ConnectivityManager
 
     @Inject
     @JvmField
