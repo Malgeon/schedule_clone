@@ -78,7 +78,7 @@ dependencies {
         api("${Libs.COROUTINES}:$coroutines")
         api("${Libs.COROUTINES_TEST}:$coroutines")
 //        api("${Libs.CRASHLYTICS}:$crashlytics")
-//        api("${Libs.DATA_STORE_PREFERENCES}:$dataStore")
+        api("${Libs.DATA_STORE_PREFERENCES}:$dataStore")
         api("${Libs.DRAWER_LAYOUT}:$drawerLayout")
         api("${Libs.ESPRESSO_CORE}:$espresso")
 //        api("${Libs.ESPRESSO_CONTRIB}:$espresso")
