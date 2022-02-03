@@ -16,6 +16,7 @@
 
 package com.example.schedule_clone.domain
 
+import com.example.schedule_clone.shared.result.Result
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
