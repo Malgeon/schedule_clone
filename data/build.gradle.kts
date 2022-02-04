@@ -6,6 +6,14 @@ plugins {
 }
 
 android {
+
+    compileSdk = Versions.COMPILE_SDK
+    defaultConfig {
+
+        minSdk = Versions.MIN_SDK
+        targetSdk = Versions.TARGET_SDK
+
+    }
 }
 
 dependencies {
