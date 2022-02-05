@@ -50,6 +50,12 @@ dependencies {
     implementation(Libs.CORE_KTX)
     implementation(Libs.APP_STARTUP)
 
+    implementation(Libs.APP_STARTUP)
+
+    // Date and time API for Java.
+    implementation(Libs.THREETENABP)
+    testImplementation(Libs.THREETENBP)
+
     // UI
     implementation(Libs.ACTIVITY_KTX)
     implementation(Libs.APPCOMPAT)
