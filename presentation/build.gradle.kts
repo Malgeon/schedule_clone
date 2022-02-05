@@ -59,7 +59,6 @@ dependencies {
     implementation(Libs.DRAWER_LAYOUT)
     implementation(Libs.MATERIAL)
 
-
     // Architecture Components
     implementation(Libs.LIFECYCLE_LIVE_DATA_KTX)
     implementation(Libs.LIFECYCLE_RUNTIME_KTX)

@@ -55,7 +55,7 @@
             android:layout_height="0dp"
             android:background="?attr/colorSurface"
             android:fitsSystemWindows="true"
-            app:layout_behavior="com.google.samples.apps.iosched.util.StatusBarScrimBehavior" />
+            app:layout_behavior="com.example.schedule_clone.presentation.util.StatusBarScrimBehavior" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
