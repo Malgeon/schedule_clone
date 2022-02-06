@@ -148,7 +148,7 @@
             app:barrierDirection="bottom"
             app:constraint_referenced_ids="livestream_icon,length_location" />
 
-        <com.google.samples.apps.iosched.widget.NoTouchRecyclerView
+        <com.example.schedule_clone.presentation.widget.NoTouchRecyclerView
             android:id="@+id/tags"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
