@@ -29,11 +29,11 @@
 
         <variable
             name="sessionClickListener"
-            type="com.example.schedule_clone.model.sessioncommon.OnSessionClickListener" />
+            type="com.example.schedule_clone.presentation.sessioncommon.OnSessionClickListener" />
 
         <variable
             name="sessionStarClickListener"
-            type="com.example.schedule_clone.model.sessioncommon.OnSessionStarClickListener" />
+            type="com.example.schedule_clone.presentation.sessioncommon.OnSessionStarClickListener" />
 
         <variable
             name="showReservations"

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.schedule_clone.model.sessioncommon
+package com.example.schedule_clone.presentation.sessioncommon
 
 import com.example.schedule_clone.model.SessionId
 import com.example.schedule_clone.model.userdata.UserSession
