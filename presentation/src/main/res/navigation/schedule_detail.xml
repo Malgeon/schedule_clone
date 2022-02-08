@@ -32,27 +32,28 @@
         app:popUpTo="@id/navigation_session_detail"
         app:popUpToInclusive="true" />
 
-<!--    <fragment-->
-<!--        android:id="@id/navigation_session_detail"-->
-<!--        android:name="com.google.samples.apps.iosched.ui.sessiondetail.SessionDetailFragment"-->
-<!--        tools:layout="@layout/fragment_session_detail">-->
-<!--        <argument-->
-<!--            android:name="session_id"-->
-<!--            app:argType="string" />-->
-<!--        <action-->
-<!--            android:id="@+id/to_speaker_detail"-->
-<!--            app:destination="@id/navigation_speaker_detail" />-->
-<!--        &lt;!&ndash; TODO support navigating to the Map &ndash;&gt;-->
-<!--    </fragment>-->
+    <fragment
+        android:id="@id/navigation_session_detail"
+        android:name="com.example.schedule_clone.presentation.sessiondetail.SessionDetailFragment"
+        tools:layout="@layout/fragment_session_detail">
+        <argument
+            android:name="session_id"
+            app:argType="string" />
+        <action
+            android:id="@+id/to_speaker_detail"
+            app:destination="@id/navigation_speaker_detail" />
+        <!-- TODO support navigating to the Map -->
 
-<!--    <fragment-->
-<!--        android:id="@id/navigation_speaker_detail"-->
-<!--        android:name="com.google.samples.apps.iosched.ui.speaker.SpeakerFragment"-->
-<!--        tools:layout="@layout/fragment_speaker">-->
-<!--        <argument-->
-<!--            android:name="speaker_id"-->
-<!--            app:argType="string" />-->
-<!--    </fragment>-->
+    </fragment>
+
+    <fragment
+        android:id="@id/navigation_speaker_detail"
+        android:name="com.example.schedule_clone.presentation.speaker.SpeakerFragment"
+        tools:layout="@layout/fragment_speaker">
+        <argument
+            android:name="speaker_id"
+            app:argType="string" />
+    </fragment>
 
     <!-- Use an empty start destination until we can load and show the first session detail. -->
     <fragment
