@@ -20,6 +20,9 @@ dependencies {
     androidTestApi(platform(project(":depconstraints")))
 
     implementation(project(":shared"))
+    implementation(project(":model"))
+    implementation(project(":data"))
+
 
     // Coroutines
     api(Libs.COROUTINES)
