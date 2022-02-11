@@ -1,6 +1,7 @@
 package com.example.schedule_clone.domain.sessions
 
 import com.example.schedule_clone.data.pref.UserEventMessage
+import com.example.schedule_clone.data.userevent.DefaultSessionAndUserEventRepository
 import com.example.schedule_clone.domain.FlowUseCase
 import com.example.schedule_clone.model.Session
 import com.example.schedule_clone.model.userdata.UserSession
@@ -12,7 +13,7 @@ import org.threeten.bp.ZonedDateTime
 import javax.inject.Inject
 
 open class LoadScheduleUserSessionsUseCase @Inject constructor(
-
+    private val userEventRepository: DefaultSessionAndUserEventRepository,
     @IoDispatcher dispatcher: CoroutineDispatcher
 ) : FlowUseCase<LoadScheduleUserSessionsParameters, LoadScheduleUserSessionsResult> {
     override fun execute(parameters: LoadScheduleUserSessionsParameters): Flow<Result<LoadScheduleUserSessionsResult>> {
