@@ -1,7 +1,10 @@
-package com.example.schedule_clone.data.userevent
+package com.example.schedule_clone.domain.userevent
 
 import com.example.schedule_clone.data.pref.UserEventMessage
 import com.example.schedule_clone.domain.sessions.LoadUserSessionUseCaseResult
+import com.example.schedule_clone.domain.users.ReservationRequestAction
+import com.example.schedule_clone.domain.users.SwapRequestAction
+import com.example.schedule_clone.shared.result.Result
 import com.example.schedule_clone.model.Session
 import com.example.schedule_clone.model.SessionId
 import com.example.schedule_clone.model.userdata.UserEvent
@@ -15,7 +18,7 @@ import javax.inject.Singleton
 @Singleton
 class DefaultSessionAndUserEventRepository @Inject constructor(
 
-) : SessionAndUserEventRepository{
+) : SessionAndUserEventRepository {
 }
 
 interface SessionAndUserEventRepository {

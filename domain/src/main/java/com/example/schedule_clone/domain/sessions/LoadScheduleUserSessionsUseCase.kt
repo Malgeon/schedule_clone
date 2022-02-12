@@ -1,7 +1,7 @@
 package com.example.schedule_clone.domain.sessions
 
 import com.example.schedule_clone.data.pref.UserEventMessage
-import com.example.schedule_clone.data.userevent.DefaultSessionAndUserEventRepository
+import com.example.schedule_clone.domain.userevent.DefaultSessionAndUserEventRepository
 import com.example.schedule_clone.domain.FlowUseCase
 import com.example.schedule_clone.model.Session
 import com.example.schedule_clone.model.userdata.UserSession
