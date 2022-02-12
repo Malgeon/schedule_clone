@@ -1,5 +1,6 @@
 package com.example.schedule_clone.domain.userevent
 
+import androidx.annotation.WorkerThread
 import com.example.schedule_clone.data.pref.UserEventMessage
 import com.example.schedule_clone.domain.sessions.LoadUserSessionUseCaseResult
 import com.example.schedule_clone.domain.users.ReservationRequestAction
@@ -17,8 +18,41 @@ import javax.inject.Singleton
 @ExperimentalCoroutinesApi
 @Singleton
 class DefaultSessionAndUserEventRepository @Inject constructor(
-
+    private val userEventDataSource: UserEventDataSource,
+    private val sessionRepository: SessionRepository
 ) : SessionAndUserEventRepository {
+
+    @WorkerThread
+    override fun getObservableUserEvents(userId: String?): Flow<Result<ObservableUserEvent>> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getObservableUserEvent(
+        userId: String?,
+        eventId: SessionId
+    ): Flow<Result<LoadUserSessionUseCaseResult>> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getUserEvents(userId: String?): List<UserEvent> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun changeReservation(
+        userId: String,
+        sessionId: SessionId,
+        action: ReservationRequestAction
+    ): Result<ReservationRequestAction> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun swapReservation(
+        userId: String,
+        fromId: SessionId,
+        toId: SessionId
+    ): Result<SwapRequestAction> {
+        TODO("Not yet implemented")
+    }
 }
 
 interface SessionAndUserEventRepository {
