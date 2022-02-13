@@ -29,6 +29,6 @@ data class UserEventsResult(
 )
 
 data class UserEventResult(
-    val userEvent: UserEvent?
+    val userEvent: UserEvent?,
     val userEventMessage: UserEventMessage? = null
 )
