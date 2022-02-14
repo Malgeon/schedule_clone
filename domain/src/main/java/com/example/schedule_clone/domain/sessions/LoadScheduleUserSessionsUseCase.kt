@@ -3,21 +3,84 @@ package com.example.schedule_clone.domain.sessions
 import com.example.schedule_clone.data.pref.UserEventMessage
 import com.example.schedule_clone.domain.userevent.DefaultSessionAndUserEventRepository
 import com.example.schedule_clone.domain.FlowUseCase
+import com.example.schedule_clone.model.ConferenceDay
 import com.example.schedule_clone.model.Session
 import com.example.schedule_clone.model.userdata.UserSession
 import com.example.schedule_clone.shared.di.IoDispatcher
 import com.example.schedule_clone.shared.result.Result
+import com.example.schedule_clone.shared.util.TimeUtils.ConferenceDays
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import org.threeten.bp.ZonedDateTime
+import timber.log.Timber
 import javax.inject.Inject
 
+/**
+ * Loads sorted sessions for the Schedule.
+ */
 open class LoadScheduleUserSessionsUseCase @Inject constructor(
     private val userEventRepository: DefaultSessionAndUserEventRepository,
     @IoDispatcher dispatcher: CoroutineDispatcher
-) : FlowUseCase<LoadScheduleUserSessionsParameters, LoadScheduleUserSessionsResult> {
+) : FlowUseCase<LoadScheduleUserSessionsParameters, LoadScheduleUserSessionsResult>(dispatcher) {
     override fun execute(parameters: LoadScheduleUserSessionsParameters): Flow<Result<LoadScheduleUserSessionsResult>> {
-        TODO("Not yet implemented")
+        Timber.d("LoadFilteredUserSessionsUseCase: Refreshing sessions with user data")
+        return userEventRepository.getObservableUserEvents(parameters.userId).map { result ->
+            when (result) {
+                is Result.Success -> {
+                    val sortedSessions = result.data.userSessions
+
+                    // Compute type from tags now so it's done in the background
+                    sortedSessions.forEach { it.session.type}
+
+                    val usecaseResult = LoadScheduleUserSessionsResult(
+                        userSessions = sortedSessions,
+                        // TODO(b/122306429) expose user events messages separately
+                        userMessage = result.data.userMessage,
+                        userMessageSession = result.data.userMessageSession,
+                        userSessionCount = sortedSessions.size,
+                        firstUnfinishedSessionIndex = findFirstUnfinishedSession(
+                            sortedSessions, parameters.now
+                        ),
+                        dayIndexer = buildConferenceDayIndexer(sortedSessions)
+                    )
+                    Result.Success(usecaseResult)
+                }
+                is Result.Error -> {
+                    Result.Error(result.exception)
+                }
+                is Result.Loading -> Result.Loading
+            }
+        }
+    }
+
+    /**
+     * During the conference, find the first session which has not finished so that the UI can
+     * scroll to it.
+     */
+    private fun findFirstUnfinishedSession(
+        userSessions: List<UserSession>,
+        now: ZonedDateTime
+    ): Int {
+        if (now.isAfter(ConferenceDays.first().start) && now.isBefore(ConferenceDays.last().end)) {
+            return userSessions.indexOfFirst { it.session.endTime.isAfter(now) }
+        }
+        return -1
+    }
+
+    /**
+     * Finds indices in [sessions] where each ConferenceDay begins. This method assumes [sessions]
+     * is sorted by start time.
+     */
+    private fun buildConferenceDayIndexer(sessions: List<UserSession>): ConferenceDayIndexer {
+        val mapping = ConferenceDays
+            .associateWith { day ->
+                sessions.indexOfFirst {
+                    day.contains(it.session)
+                }
+            }
+            .filterValues { it >= 0 }
+        return ConferenceDayIndexer(mapping)
     }
 }
 

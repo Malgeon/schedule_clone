@@ -46,6 +46,8 @@ dependencies {
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation(project(":shared"))
     implementation(project(":model"))
+    implementation(project(":domain"))
+
 
     implementation(Libs.CORE_KTX)
     implementation(Libs.APP_STARTUP)
