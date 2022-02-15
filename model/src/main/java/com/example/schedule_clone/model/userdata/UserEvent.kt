@@ -1,6 +1,5 @@
 package com.example.schedule_clone.model.userdata
 
-
 import com.example.schedule_clone.model.SessionId
 import com.example.schedule_clone.model.reservations.ReservationRequest
 import com.example.schedule_clone.model.reservations.ReservationRequest.ReservationRequestEntityAction.CANCEL_REQUESTED

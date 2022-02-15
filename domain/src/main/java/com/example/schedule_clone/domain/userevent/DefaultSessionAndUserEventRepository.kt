@@ -5,7 +5,11 @@ import com.example.schedule_clone.data.pref.UserEventMessage
 import com.example.schedule_clone.data.session.SessionRepository
 import com.example.schedule_clone.domain.sessions.LoadUserSessionUseCaseResult
 import com.example.schedule_clone.domain.users.ReservationRequestAction
+import com.example.schedule_clone.domain.users.ReservationRequestAction.RequestAction
+import com.example.schedule_clone.domain.users.ReservationRequestAction.SwapAction
+import com.example.schedule_clone.domain.users.StarUpdatedStatus
 import com.example.schedule_clone.domain.users.SwapRequestAction
+import com.example.schedule_clone.model.ConferenceDay
 import com.example.schedule_clone.shared.result.Result
 import com.example.schedule_clone.model.Session
 import com.example.schedule_clone.model.SessionId
@@ -26,7 +30,6 @@ class DefaultSessionAndUserEventRepository @Inject constructor(
     private val userEventDataSource: UserEventDataSource,
     private val sessionRepository: SessionRepository
 ) : SessionAndUserEventRepository {
-
     @WorkerThread
     override fun getObservableUserEvents(userId: String?): Flow<Result<ObservableUserEvent>> {
         return flow {
@@ -57,7 +60,7 @@ class DefaultSessionAndUserEventRepository @Inject constructor(
                         val allSessions = sessionRepository.getSessions()
                         val userSessions = mergeUserDataAndSessions(userEvents, allSessions)
                         // TODO(b/122306429) expose user events messages separately
-                        val userEventsMessageSession = allSessions.firstOrNull{
+                        val userEventsMessageSession = allSessions.firstOrNull {
                             it.id == userEvents.userEventsMessage?.sessionId
                         }
                         Result.Success(
@@ -109,7 +112,27 @@ class DefaultSessionAndUserEventRepository @Inject constructor(
     }
 
     override fun getUserEvents(userId: String?): List<UserEvent> {
-        TODO("Not yet implemented")
+        return userEventDataSource.getUserEvents(userId ?: "")
+    }
+
+    override fun getUserSession(userId: String, sessionId: SessionId): UserSession {
+        val session = sessionRepository.getSession(sessionId)
+        val userEvent = userEventDataSource.getUserEvent(userId, sessionId)
+            ?: throw Exception("UserEvent not found")
+
+        return UserSession(
+            session = session,
+            userEvent = userEvent
+        )
+    }
+
+    override suspend fun starEvent(
+        userId: String,
+        userEvent: UserEvent
+    ): Result<StarUpdatedStatus> = userEventDataSource.startEvent(userId, userEvent)
+
+    override suspend fun recordFeedbackSent(userId: String, userEvent: UserEvent): Result<Unit> {
+        return userEventDataSource.recordFeedbackSent(userId, userEvent)
     }
 
     override suspend fun changeReservation(
@@ -117,6 +140,10 @@ class DefaultSessionAndUserEventRepository @Inject constructor(
         sessionId: SessionId,
         action: ReservationRequestAction
     ): Result<ReservationRequestAction> {
+        val sessions = sessionRepository.getSessions().associateBy { it.id }
+        val userEvents = getUserEvents(userId)
+        val session = sessionRepository.getSession(sessionId)
+        val overlappingId = findOverlappingReservationId(session, action, sessions, userEvents)
         TODO("Not yet implemented")
     }
 
@@ -125,6 +152,23 @@ class DefaultSessionAndUserEventRepository @Inject constructor(
         fromId: SessionId,
         toId: SessionId
     ): Result<SwapRequestAction> {
+        TODO("Not yet implemented")
+    }
+
+    private fun findOverlappingReservationId(
+        session: Session,
+        action: ReservationRequestAction,
+        sessions: Map<String, Session>,
+        userEvents: List<UserEvent>
+    ): String? {
+        if (action !is RequestAction) return null
+        val overlappingUserEvent = userEvents.find {
+            sessions[it.id]?.isOverlapping(session) == true &&
+                    (it.isReviewed)
+        }
+    }
+
+    override fun getConferenceDays(): List<ConferenceDay> {
         TODO("Not yet implemented")
     }
 
@@ -142,7 +186,7 @@ class DefaultSessionAndUserEventRepository @Inject constructor(
     ): List<UserSession> {
         // If there is no logged-in user, return the map with null UserEvents
         if (userData == null) {
-            return allSessions.map { UserSession(it, createDefaultUserEvent(it))}
+            return allSessions.map { UserSession(it, createDefaultUserEvent(it)) }
         }
 
         val (userEvents, _) = userData
@@ -180,12 +224,24 @@ interface SessionAndUserEventRepository {
         toId: SessionId
     ): Result<SwapRequestAction>
 
+    suspend fun starEvent(userId: String, userEvent: UserEvent): Result<StarUpdatedStatus>
+
+    suspend fun recordFeedbackSent(
+        userId: String,
+        userEvent: UserEvent
+    ): Result<Unit>
+
+    fun getConferenceDays(): List<ConferenceDay>
+
+    fun getUserSession(userId: String, sessionId: SessionId): UserSession
 }
 
 data class ObservableUserEvent(
     val userSessions: List<UserSession>,
 
+    /** A message to show to the user with important changes like reservation confirmations */
     val userMessage: UserEventMessage? = null,
 
+    /** The session the user message is about, if any. */
     val userMessageSession: Session? = null
 )
