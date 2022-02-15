@@ -1,6 +1,7 @@
 package com.example.schedule_clone.domain.users
 
 import com.example.schedule_clone.domain.UseCase
+import com.example.schedule_clone.domain.sessions.StarReserveNotificationAlarmUpdater
 import com.example.schedule_clone.domain.userevent.SessionAndUserEventRepository
 import com.example.schedule_clone.model.userdata.UserSession
 import com.example.schedule_clone.shared.di.IoDispatcher

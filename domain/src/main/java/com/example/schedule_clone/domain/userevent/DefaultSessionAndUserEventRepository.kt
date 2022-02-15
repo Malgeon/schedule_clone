@@ -6,8 +6,6 @@ import com.example.schedule_clone.data.session.SessionRepository
 import com.example.schedule_clone.domain.sessions.LoadUserSessionUseCaseResult
 import com.example.schedule_clone.domain.users.ReservationRequestAction
 import com.example.schedule_clone.domain.users.SwapRequestAction
-import com.example.schedule_clone.domain.users.UserEventDataSource
-import com.example.schedule_clone.domain.users.UserEventsResult
 import com.example.schedule_clone.shared.result.Result
 import com.example.schedule_clone.model.Session
 import com.example.schedule_clone.model.SessionId

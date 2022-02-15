@@ -1,13 +1,24 @@
 package com.example.schedule_clone.domain.users
 
 import com.example.schedule_clone.domain.UseCase
+import com.example.schedule_clone.domain.sessions.StarReserveNotificationAlarmUpdater
+import com.example.schedule_clone.domain.userevent.SessionAndUserEventRepository
 import com.example.schedule_clone.model.SessionId
 import com.example.schedule_clone.model.userdata.UserSession
+import com.example.schedule_clone.shared.di.IoDispatcher
+import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Inject
 
 open class ReservationActionUseCase @Inject constructor(
+    private val repository: SessionAndUserEventRepository,
+    private val alarmUpdater: StarReserveNotificationAlarmUpdater,
+    @IoDispatcher ioDispatcher: CoroutineDispatcher
+) : UseCase<ReservationRequestParameters, ReservationRequestAction>(ioDispatcher){
 
-) : UseCase<>(){
+    override suspend fun execute(parameters: ReservationRequestParameters): ReservationRequestAction {
+        TODO("Not yet implemented")
+    }
+
 }
 
 data class ReservationRequestParameters(

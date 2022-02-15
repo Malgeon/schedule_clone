@@ -1,6 +1,9 @@
-package com.example.schedule_clone.domain.users
+package com.example.schedule_clone.domain.userevent
 
 import com.example.schedule_clone.data.pref.UserEventMessage
+import com.example.schedule_clone.domain.users.ReservationRequestAction
+import com.example.schedule_clone.domain.users.StarUpdatedStatus
+import com.example.schedule_clone.domain.users.SwapRequestAction
 import com.example.schedule_clone.model.Session
 import com.example.schedule_clone.model.SessionId
 import com.example.schedule_clone.model.userdata.UserEvent
@@ -21,7 +24,7 @@ interface UserEventDataSource {
      * @param userEvent the [UserEvent], which isStarred is going to be the updated status
      * @return the Result that represents the status of the star operation.
      */
-    suspend fun startEvent(userId: String, userEvent: UserEvent): Result<StartUpdatedStatus>
+    suspend fun startEvent(userId: String, userEvent: UserEvent): Result<StarUpdatedStatus>
 
     suspend fun recordFeedbackSent(
         userId: String,
