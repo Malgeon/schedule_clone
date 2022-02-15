@@ -1,6 +1,7 @@
 package com.example.schedule_clone.domain.component.notifications
 
 import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.Context
 import androidx.core.content.getSystemService
 import com.example.schedule_clone.model.SessionId
@@ -27,10 +28,23 @@ open class SessionAlarmManager @Inject constructor(@ApplicationContext val conte
 
         cancelAlarmForSession(session.id)
 
+        val upcomingIntent =
+            makePendingIntent(session.id, AlarmBroadcastReceiver.CHANNEL_ID_UPCOMING)
+
     }
 
     open fun cancelAlarmForSession(sessionId: SessionId) {
 
+    }
+
+    private fun makePendingIntent(sessionId: SessionId, channel: String): PendingIntent? {
+        return PendingIntent.getBroadcast(
+            context,
+            // To make the requestCode unique for the upcoming and feedback channels for the
+            // same session, concatenating the strings
+            (sessionId + channel).hashCode(),
+            Intent(context, Alarm)
+        )
     }
 
     companion object {

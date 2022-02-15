@@ -5,20 +5,40 @@ import com.example.schedule_clone.domain.sessions.StarReserveNotificationAlarmUp
 import com.example.schedule_clone.domain.userevent.SessionAndUserEventRepository
 import com.example.schedule_clone.model.SessionId
 import com.example.schedule_clone.model.userdata.UserSession
+import com.example.schedule_clone.shared.result.Result.Success
+import com.example.schedule_clone.shared.result.Result.Error
+import com.example.schedule_clone.shared.result.Result.Loading
 import com.example.schedule_clone.shared.di.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
+import java.lang.IllegalStateException
 import javax.inject.Inject
 
 open class ReservationActionUseCase @Inject constructor(
     private val repository: SessionAndUserEventRepository,
     private val alarmUpdater: StarReserveNotificationAlarmUpdater,
     @IoDispatcher ioDispatcher: CoroutineDispatcher
-) : UseCase<ReservationRequestParameters, ReservationRequestAction>(ioDispatcher){
+) : UseCase<ReservationRequestParameters, ReservationRequestAction>(ioDispatcher) {
 
     override suspend fun execute(parameters: ReservationRequestParameters): ReservationRequestAction {
-        TODO("Not yet implemented")
+        val (userId, sessionId, action) = parameters
+        return when (
+            val updateResult = repository.changeReservation(userId, sessionId, action)
+        ) {
+            is Success -> {
+                if (parameters.userSession != null) {
+                    alarmUpdater.updateSession(
+                        parameters.userSession,
+                        parameters.userSession.userEvent.isStarred ||
+                                // TODO(b/130515170)
+                                updateResult.data is ReservationRequestAction.RequestAction
+                    )
+                }
+                updateResult.data
+            }
+            is Error -> throw updateResult.exception
+            Loading -> throw IllegalStateException()
+        }
     }
-
 }
 
 data class ReservationRequestParameters(
