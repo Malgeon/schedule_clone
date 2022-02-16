@@ -1,12 +1,19 @@
 package com.example.schedule_clone.domain.component.notifications
 
-import android.app.NotificationManager
+import android.app.*
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.ACTION_VIEW
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.annotation.WorkerThread
+import androidx.core.app.NotificationCompat
+import androidx.core.content.getSystemService
+import androidx.core.net.toUri
 import com.example.schedule_clone.data.pref.PreferenceStorage
 import com.example.schedule_clone.data.signin.datasources.AuthIdDataSource
+import com.example.schedule_clone.shared.R
 import com.example.schedule_clone.domain.sessions.LoadSessionOneShotUseCase
 import com.example.schedule_clone.domain.sessions.LoadUserSessionOneShotUseCase
 import com.example.schedule_clone.model.Session
@@ -21,6 +28,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.first
 import org.threeten.bp.Instant
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 /**
@@ -72,7 +80,7 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
         if (userEvent is Success) {
             val event = userEvent.data.userEvent
             if (event.isPreSessionNotificationRequired() &&
-                    isSessionCurrent(userEvent.data.session)
+                isSessionCurrent(userEvent.data.session)
             ) {
                 try {
                     val notificationId = showPreSessionNotification(context, userEvent.data.session)
@@ -98,7 +106,7 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
                 if (session is Success) {
                     val notificationId = showPreSessionNotification(context, session.data)
                     alarmManager.dismissNotificationInFiveMinutes(notificationId)
-                } else{
+                } else {
                     Timber.e("Session couldn't be loaded for notification")
                 }
             }
@@ -128,7 +136,50 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
         val notificationManager: NotificationManager = context.getSystemService()
             ?: throw Exception("Notification Manager not found.")
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            makeNotificationChannelForPreSession(context, notificationManager)
+        }
 
+        val intent = Intent(
+            ACTION_VIEW,
+            "iosched://sessions?$QUERY_SESSION_ID=${session.id}".toUri()
+        )
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+
+        // Create the TaskStackBuilder
+        val resultPendingIntent: PendingIntent? = TaskStackBuilder.create(context)
+            // Add the intent, which inflates the back stack
+            .addNextIntentWithParentStack(intent)
+            // Get the PendingIntent containing the entire back stack
+            .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val notification = NotificationCompat.Builder(context, CHANNEL_ID_UPCOMING)
+            .setContentTitle(session.title)
+            .setContentText(context.getString(R.string.starting_soon))
+            .setSmallIcon(R.drawable.ic_notification_io_logo)
+            .setContentIntent(resultPendingIntent)
+            .setTimeoutAfter(TimeUnit.MINUTES.toMillis(10)) // Backup (cancelled with receiver)
+            .setAutoCancel(true)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .build()
+
+        val notificationId = session.id.hashCode()
+        notificationManager.notify(notificationId, notification)
+        return notificationId
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun makeNotificationChannelForPreSession(
+        context: Context,
+        notificationManager: NotificationManager
+    ) {
+        notificationManager.createNotificationChannel(
+            NotificationChannel(
+                CHANNEL_ID_UPCOMING,
+                context.getString(R.string.session_notifications),
+                NotificationManager.IMPORTANCE_DEFAULT
+            ).apply { lockscreenVisibility = Notification.VISIBILITY_PUBLIC }
+        )
     }
 
     private fun isSessionCurrent(session: Session): Boolean {
