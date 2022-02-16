@@ -9,6 +9,7 @@ import com.example.schedule_clone.domain.users.ReservationRequestAction.RequestA
 import com.example.schedule_clone.domain.users.ReservationRequestAction.SwapAction
 import com.example.schedule_clone.domain.users.StarUpdatedStatus
 import com.example.schedule_clone.domain.users.SwapRequestAction
+import com.example.schedule_clone.domain.users.SwapRequestParameters
 import com.example.schedule_clone.model.ConferenceDay
 import com.example.schedule_clone.shared.result.Result
 import com.example.schedule_clone.model.Session
@@ -144,7 +145,27 @@ class DefaultSessionAndUserEventRepository @Inject constructor(
         val userEvents = getUserEvents(userId)
         val session = sessionRepository.getSession(sessionId)
         val overlappingId = findOverlappingReservationId(session, action, sessions, userEvents)
-        TODO("Not yet implemented")
+        if (overlappingId != null) {
+            // If there is already an overlapping reservation, return the result as
+            // SwapAction is needed.
+            val overlappingSession = sessionRepository.getSession(overlappingId)
+            Timber.d(
+                """User is trying to reserve a session that overlaps with the
+                    |session id: $overlappingId, title: ${overlappingSession.title}""".trimMargin()
+            )
+            return Result.Success(
+                SwapAction(
+                    SwapRequestParameters(
+                        userId,
+                        fromId = overlappingId,
+                        fromTitle = overlappingSession.title,
+                        toId = sessionId,
+                        toTitle = session.title
+                    )
+                )
+            )
+        }
+        return userEventDataSource.requestReservation(userId, session, action)
     }
 
     override suspend fun swapReservation(
@@ -152,7 +173,9 @@ class DefaultSessionAndUserEventRepository @Inject constructor(
         fromId: SessionId,
         toId: SessionId
     ): Result<SwapRequestAction> {
-        TODO("Not yet implemented")
+        val toSession = sessionRepository.getSession(toId)
+        val fromSession = sessionRepository.getSession(fromId)
+        return userEventDataSource.swapReservation(userId, fromSession, toSession)
     }
 
     private fun findOverlappingReservationId(
@@ -164,12 +187,9 @@ class DefaultSessionAndUserEventRepository @Inject constructor(
         if (action !is RequestAction) return null
         val overlappingUserEvent = userEvents.find {
             sessions[it.id]?.isOverlapping(session) == true &&
-                    (it.isReviewed)
+                    (it.isReserved() || it.isWaitlisted())
         }
-    }
-
-    override fun getConferenceDays(): List<ConferenceDay> {
-        TODO("Not yet implemented")
+        return overlappingUserEvent?.id
     }
 
     private fun createDefaultUserEvent(session: Session): UserEvent {
@@ -195,6 +215,8 @@ class DefaultSessionAndUserEventRepository @Inject constructor(
             UserSession(it, eventIdToUserEvent[it.id] ?: createDefaultUserEvent(it))
         }
     }
+
+    override fun getConferenceDays(): List<ConferenceDay> = sessionRepository.getConferenceDays()
 }
 
 interface SessionAndUserEventRepository {

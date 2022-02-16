@@ -39,7 +39,7 @@ data class SwapRequestParameters(
     val fromId: SessionId,
     val fromTitle: String,
     val toId: SessionId,
-    val ToTitle: String
+    val toTitle: String
 )
 
 class SwapRequestAction
