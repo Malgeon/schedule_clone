@@ -14,10 +14,18 @@
  * limitations under the License.
  */
 
-package com.example.schedule_clone.shared.di
+package com.example.schedule_clone.domain.di
 
+import com.example.schedule_clone.data.ConferenceDataRepository
+import com.example.schedule_clone.data.ConferenceDataSource
+import com.example.schedule_clone.data.db.AppDatabase
+import com.example.schedule_clone.data.session.DefaultSessionRepository
+import com.example.schedule_clone.data.session.SessionRepository
+import com.example.schedule_clone.domain.userevent.DefaultSessionAndUserEventRepository
+import com.example.schedule_clone.domain.userevent.SessionAndUserEventRepository
+import com.example.schedule_clone.domain.userevent.UserEventDataSource
 import com.example.schedule_clone.shared.config.AppConfigDataSource
-import com.example.schedule_clone.shared.fake.FakeAppConfigDataSource
+import com.example.schedule_clone.domain.fake.FakeAppConfigDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -34,37 +42,37 @@ class SharedModule {
 
 // Define the data source implementations that should be used. All data sources are singletons.
 
-//    @Singleton
-//    @Provides
-//    @Named("remoteConfDatasource")
-//    fun provideConferenceDataSource(): ConferenceDataSource {
-//        return FakeConferenceDataSource
-//    }
+    @Singleton
+    @Provides
+    @Named("remoteConfDatasource")
+    fun provideConferenceDataSource(): ConferenceDataSource {
+        return FakeConferenceDataSource
+    }
 
-//    @Singleton
-//    @Provides
-//    @Named("bootstrapConfDataSource")
-//    fun provideBootstrapRemoteSessionDataSource(): ConferenceDataSource {
-//        return FakeConferenceDataSource
-//    }
-//
-//    @Singleton
-//    @Provides
-//    fun provideConferenceDataRepository(
-//        @Named("remoteConfDatasource") remoteDataSource: ConferenceDataSource,
-//        @Named("bootstrapConfDataSource") boostrapDataSource: ConferenceDataSource,
-//        appDatabase: AppDatabase
-//    ): ConferenceDataRepository {
-//        return ConferenceDataRepository(remoteDataSource, boostrapDataSource, appDatabase)
-//    }
+    @Singleton
+    @Provides
+    @Named("bootstrapConfDataSource")
+    fun provideBootstrapRemoteSessionDataSource(): ConferenceDataSource {
+        return FakeConferenceDataSource
+    }
 
-//    @Singleton
-//    @Provides
-//    fun provideSessionRepository(
-//        conferenceDataRepository: ConferenceDataRepository
-//    ): SessionRepository {
-//        return DefaultSessionRepository(conferenceDataRepository)
-//    }
+    @Singleton
+    @Provides
+    fun provideConferenceDataRepository(
+    @Named("remoteConfDatasource") remoteDataSource: ConferenceDataSource,
+    @Named("bootstrapConfDataSource") boostrapDataSource: ConferenceDataSource,
+    appDatabase: AppDatabase
+    ): ConferenceDataRepository {
+        return ConferenceDataRepository(remoteDataSource, boostrapDataSource, appDatabase)
+    }
+
+    @Singleton
+    @Provides
+    fun provideSessionRepository(
+        conferenceDataRepository: ConferenceDataRepository
+    ): SessionRepository {
+        return DefaultSessionRepository(conferenceDataRepository)
+    }
 
 //    @Singleton
 //    @Provides
@@ -78,17 +86,17 @@ class SharedModule {
 //        return FakeFeedbackEndpoint
 //    }
 //
-//    @Singleton
-//    @Provides
-//    fun provideSessionAndUserEventRepository(
-//        userEventDataSource: UserEventDataSource,
-//        sessionRepository: SessionRepository
-//    ): SessionAndUserEventRepository {
-//        return DefaultSessionAndUserEventRepository(
-//            userEventDataSource,
-//            sessionRepository
-//        )
-//    }
+    @Singleton
+    @Provides
+    fun provideSessionAndUserEventRepository(
+    userEventDataSource: UserEventDataSource,
+    sessionRepository: SessionRepository
+    ): SessionAndUserEventRepository {
+        return DefaultSessionAndUserEventRepository(
+            userEventDataSource,
+            sessionRepository
+        )
+    }
 
 //    @Singleton
 //    @Provides

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.schedule_clone.shared.fake
+package com.example.schedule_clone.domain.fake
 
 import android.content.res.Resources.NotFoundException
 import com.example.schedule_clone.model.ConferenceWifiInfo
