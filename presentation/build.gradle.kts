@@ -47,6 +47,7 @@ dependencies {
     implementation(project(":shared"))
     implementation(project(":model"))
     implementation(project(":domain"))
+    implementation(project(":data"))
 
 
     implementation(Libs.CORE_KTX)
