@@ -26,6 +26,7 @@ import com.example.schedule_clone.domain.userevent.SessionAndUserEventRepository
 import com.example.schedule_clone.domain.userevent.UserEventDataSource
 import com.example.schedule_clone.shared.config.AppConfigDataSource
 import com.example.schedule_clone.domain.fake.FakeAppConfigDataSource
+import com.example.schedule_clone.domain.fake.FakeConferenceDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -1,6 +1,7 @@
 package com.example.schedule_clone.data
 
 import com.example.schedule_clone.model.ConferenceData
+import com.example.schedule_clone.data.BuildConfig.BOOTSTRAP_CONF_DATA_FILENAME
 
 object BootstrapConferenceDataSource : ConferenceDataSource {
 
@@ -17,6 +18,6 @@ object BootstrapConferenceDataSource : ConferenceDataSource {
         val conferenceDataStream = this.javaClass.classLoader!!
             .getResource(BuildConfig.BOOTSTRAP_CONF_DATA_FILENAME).openStream()
 
-        return ConferenceDataJsonParser.
+        return ConferenceDataJsonParser.parseConferenceData(conferenceDataStream)
     }
 }

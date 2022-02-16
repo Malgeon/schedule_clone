@@ -25,11 +25,6 @@ android {
 
         buildConfigField(
             "String",
-            "BOOTSTRAP_CONF_DATA_FILENAME", project.properties["bootstrap_conference_data_filename"] as String
-        )
-
-        buildConfigField(
-            "String",
             "CONFERENCE_WIFI_OFFERING_START", project.properties["conference_wifi_offering_start"] as String
         )
     }
