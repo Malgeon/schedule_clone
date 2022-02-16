@@ -13,6 +13,10 @@ android {
         minSdk = Versions.MIN_SDK
         targetSdk = Versions.TARGET_SDK
 
+        buildConfigField(
+            "String",
+            "BOOTSTRAP_CONF_DATA_FILENAME", project.properties["bootstrap_conference_data_filename"] as String
+        )
     }
 }
 
@@ -23,6 +27,9 @@ dependencies {
     androidTestApi(platform(project(":depconstraints")))
 
     implementation(project(":model"))
+
+    // Utils
+    implementation(Libs.GSON)
 
     // DataStore
     implementation(Libs.DATA_STORE_PREFERENCES)
