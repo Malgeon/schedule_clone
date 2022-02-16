@@ -27,8 +27,10 @@ dependencies {
     androidTestApi(platform(project(":depconstraints")))
 
     implementation(project(":model"))
+    implementation(project(":shared"))
 
     // Utils
+    api(Libs.TIMBER)
     implementation(Libs.GSON)
 
     // DataStore
