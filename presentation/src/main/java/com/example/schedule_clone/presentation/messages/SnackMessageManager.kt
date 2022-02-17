@@ -9,7 +9,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-open class SnackbarMessageManager @Inject constructor(
+open class SnackMessageManager @Inject constructor(
     private val preferenceStorage: PreferenceStorage,
     @ApplicationScope private val coroutineScope: CoroutineScope,
     private val stopSnackberActionUseCase: StopSnackbarActionUseCase

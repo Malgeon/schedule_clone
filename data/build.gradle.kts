@@ -52,4 +52,7 @@ dependencies {
     implementation(Libs.HILT_ANDROID)
     kapt(Libs.HILT_COMPILER)
 
+    // Firebase
+    api(Libs.FIREBASE_AUTH)
+
 }
