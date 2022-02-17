@@ -16,7 +16,7 @@
 
 package com.example.schedule_clone.domain
 
-import com.example.schedule_clone.domain.UseCase
+import com.example.schedule_clone.data.ConferenceDataRepository
 import com.example.schedule_clone.shared.di.IoDispatcher
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
@@ -26,13 +26,13 @@ import timber.log.Timber
  * Forces a refresh in the conference data repository.
  */
 open class RefreshConferenceDataUseCase @Inject constructor(
-//    private val repository: ConferenceDataRepository,
+    private val repository: ConferenceDataRepository,
     @IoDispatcher dispatcher: CoroutineDispatcher
 ) : UseCase<Any, Boolean>(dispatcher) {
 
     override suspend fun execute(parameters: Any): Boolean {
         try {
-//            repository.refreshCacheWithRemoteConferenceData()
+            repository.refreshCacheWithRemoteConferenceData()
         } catch (e: Exception) {
             Timber.e(e, "Conference data refresh failed")
             throw e

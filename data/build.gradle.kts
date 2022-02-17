@@ -35,6 +35,11 @@ dependencies {
     implementation(project(":model"))
     implementation(project(":shared"))
 
+    // Architecture Components
+    implementation(Libs.ROOM_KTX)
+    implementation(Libs.ROOM_RUNTIME)
+    kapt(Libs.ROOM_COMPILER)
+
     // Utils
     api(Libs.TIMBER)
     implementation(Libs.GSON)
