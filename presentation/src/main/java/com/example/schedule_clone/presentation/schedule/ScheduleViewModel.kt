@@ -91,11 +91,28 @@ class ScheduleViewModel @Inject constructor(
                 if (it is Success) {
                     it.data.userMessage?.type?.stringRes()?.let { messageId ->
                         // There is a message to display:
-
-
+                        snackMessageManager.addMessage(
+                            SnackbarMessage(
+                                messageId = messageId,
+                                longDuration = true,
+                                session = it.data.userMessageSession,
+                                requestChangeId = it.data.userMessage?.changeRequestId
+                            )
+                        )
                     }
                 }
             }
+            .stateIn(viewModelScope, WhileViewSubscribed, Result.Loading)
+
+    val isLoading: StateFlow<Boolean> = loadSessionsResult.mapLatest {
+        it = Result.Loading
+    }.stateIn(viewModelScope, WhileViewSubscribed, ture)
+
+    // Expose new UI data when loadSessionsResult changes
+    val scheduleUiData: StateFLow<ScheduleUiData> =
+        loadSessionsResult.combineTransform(timeZoneId) { sessions, timeZone ->
+
+        }
 
     /** Flows for Actions and Events **/
 
