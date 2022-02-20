@@ -31,7 +31,7 @@ class ScheduleViewModel @Inject constructor(
     signInViewModelDelegate: SignInViewModelDelegate,
     scheduleUiHintsShownUseCase: ScheduleUiHintsShownUseCase,
     topicSubscriber: TopicSubscriber,
-    private val snackbarMessageManager: SnackMessageManager,
+    private val snackbarMessageManager: SnackbarMessageManager,
     getTimeZoneUseCase: GetTimeZoneUseCase,
     private val refreshConferenceDataUseCase: RefreshConferenceDataUseCase,
     observeConferenceDataUseCase: ObserveConferenceDataUseCase
@@ -91,7 +91,7 @@ class ScheduleViewModel @Inject constructor(
                 if (it is Success) {
                     it.data.userMessage?.type?.stringRes()?.let { messageId ->
                         // There is a message to display:
-                        snackMessageManager.addMessage(
+                        snackbarMessageManager.addMessage(
                             SnackbarMessage(
                                 messageId = messageId,
                                 longDuration = true,
@@ -109,7 +109,7 @@ class ScheduleViewModel @Inject constructor(
     }.stateIn(viewModelScope, WhileViewSubscribed, ture)
 
     // Expose new UI data when loadSessionsResult changes
-    val scheduleUiData: StateFLow<ScheduleUiData> =
+    val scheduleUiData: StateFlow<ScheduleUiData> =
         loadSessionsResult.combineTransform(timeZoneId) { sessions, timeZone ->
 
         }
