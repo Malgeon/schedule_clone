@@ -8,6 +8,7 @@ import com.example.schedule_clone.domain.prefs.ScheduleUiHintsShownUseCase
 import com.example.schedule_clone.domain.sessions.*
 import com.example.schedule_clone.domain.settings.GetTimeZoneUseCase
 import com.example.schedule_clone.presentation.messages.SnackMessageManager
+import com.example.schedule_clone.presentation.messages.SnackbarMessageManager
 import com.example.schedule_clone.presentation.sessioncommon.stringRes
 import com.example.schedule_clone.presentation.signin.SignInViewModelDelegate
 import com.example.schedule_clone.presentation.util.WhileViewSubscribed
