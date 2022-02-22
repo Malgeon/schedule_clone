@@ -17,6 +17,8 @@ import androidx.room.RoomDatabase
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun sessionFtsDao(): SessionFtsDao
+    abstract fun speakerFtsDao(): SpeakerFtsDao
+    abstract fun codelabFtsDao(): CodelabFtsDao
 
     companion object {
         private const val databaseName = "schedule-db"

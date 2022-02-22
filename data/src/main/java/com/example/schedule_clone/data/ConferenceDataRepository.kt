@@ -1,8 +1,12 @@
 package com.example.schedule_clone.data
 
 import com.example.schedule_clone.data.db.AppDatabase
+import com.example.schedule_clone.data.db.CodelabFtsEntity
 import com.example.schedule_clone.data.db.SessionFtsEntity
+import com.example.schedule_clone.data.db.SpeakerFtsEntity
 import com.example.schedule_clone.model.ConferenceData
+import com.example.schedule_clone.model.ConferenceDay
+import com.example.schedule_clone.shared.util.TimeUtils
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import java.io.IOException
@@ -26,12 +30,12 @@ open class ConferenceDataRepository @Inject constructor(
     private var conferenceDataCache: ConferenceData? = null
 
     val currentConferenceDataVersion: Int
-    get() = conferenceDataCache?.version ?: 0
+        get() = conferenceDataCache?.version ?: 0
 
     var latestException: Exception? = null
-    private set
+        private set
     var latestUpdateSource: UpdateSource = UpdateSource.NONE
-    private set
+        private set
 
     // Using a SharedFlow instead of StateFlow as there isn't an initial value to be emitted
     private val dataLastUpdatedFlow = MutableSharedFlow<Long>(replay = 1)
@@ -59,6 +63,42 @@ open class ConferenceDataRepository @Inject constructor(
             conferenceDataCache = conferenceData
             populateSearchData(conferenceData)
         }
+
+        // Update meta
+        latestException = null
+        dataLastUpdatedFlow.tryEmit(System.currentTimeMillis())
+        latestUpdateSource = UpdateSource.NETWORK
+        latestException = null
+    }
+
+    fun getOfflineConferenceData(): ConferenceData {
+        synchronized(loadConfDataLock) {
+            val offlineData = conferenceDataCache ?: getCacheOrBootstrapDataAndPopulateSearch()
+            conferenceDataCache = offlineData
+            return offlineData
+        }
+    }
+
+    private fun getCacheOrBootstrapDataAndPopulateSearch(): ConferenceData {
+        val conferenceData = getCacheOrBootstrapData()
+        populateSearchData(conferenceData)
+        return conferenceData
+    }
+
+    private fun getCacheOrBootstrapData(): ConferenceData {
+        // First, try the local cache:
+        var conferenceData = remoteDataSource.getOfflineConferenceData()
+
+        // Cache success!
+        if (conferenceData != null) {
+            latestUpdateSource = UpdateSource.CACHE
+            return conferenceData
+        }
+
+        // Second, use the bootstrap file:
+        conferenceData = boostrapDataSource.getOfflineConferenceData()!!
+        latestUpdateSource = UpdateSource.BOOTSTRAP
+        return conferenceData
     }
 
     open fun populateSearchData(conferenceData: ConferenceData) {
@@ -71,8 +111,23 @@ open class ConferenceDataRepository @Inject constructor(
             )
         }
         appDatabase.sessionFtsDao().insertAll(sessionFtsEntities)
-        val
+        val speakers = conferenceData.speakers.map {
+            SpeakerFtsEntity(
+                speakerId = it.id,
+                name = it.name,
+                description = it.biography
+            )
+        }
+        appDatabase.speakerFtsDao().insertAll(speakers)
+        val codelabs = conferenceData.codelabs.map {
+            CodelabFtsEntity(
+                codelabId = it.id,
+                title = it.title,
+                description = it.description
+            )
+        }
+        appDatabase.codelabFtsDao().insertAll(codelabs)
     }
 
-
+    open fun getConferenceDays(): List<ConferenceDay> = TimeUtils.ConferenceDays
 }
