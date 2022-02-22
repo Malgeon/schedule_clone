@@ -1,6 +1,7 @@
 package com.example.schedule_clone.data
 
 import com.example.schedule_clone.data.db.AppDatabase
+import com.example.schedule_clone.data.db.SessionFtsEntity
 import com.example.schedule_clone.model.ConferenceData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -62,8 +63,15 @@ open class ConferenceDataRepository @Inject constructor(
 
     open fun populateSearchData(conferenceData: ConferenceData) {
         val sessionFtsEntities = conferenceData.sessions.map { session ->
-            SessionFtsEntity
+            SessionFtsEntity(
+                sessionId = session.id,
+                title = session.title,
+                description = session.description,
+                speakers = session.speakers.joinToString { it.name }
+            )
         }
+        appDatabase.sessionFtsDao().insertAll(sessionFtsEntities)
+        val
     }
 
 
