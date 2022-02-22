@@ -7,18 +7,24 @@ import com.example.schedule_clone.domain.fcm.TopicSubscriber
 import com.example.schedule_clone.domain.prefs.ScheduleUiHintsShownUseCase
 import com.example.schedule_clone.domain.sessions.*
 import com.example.schedule_clone.domain.settings.GetTimeZoneUseCase
-import com.example.schedule_clone.presentation.messages.SnackMessageManager
+import com.example.schedule_clone.model.ConferenceDay
+import com.example.schedule_clone.model.userdata.UserSession
+import com.example.schedule_clone.presentation.messages.SnackbarMessage
 import com.example.schedule_clone.presentation.messages.SnackbarMessageManager
+import com.example.schedule_clone.presentation.schedule.ScheduleNavigationAction.ShowScheduleUiHints
 import com.example.schedule_clone.presentation.sessioncommon.stringRes
 import com.example.schedule_clone.presentation.signin.SignInViewModelDelegate
 import com.example.schedule_clone.presentation.util.WhileViewSubscribed
 import com.example.schedule_clone.shared.result.successOr
+import com.example.schedule_clone.shared.result.Result
 import com.example.schedule_clone.shared.result.Result.Success
 import com.example.schedule_clone.shared.result.Result.Error
+import com.example.schedule_clone.shared.result.data
 import com.example.schedule_clone.shared.util.TimeUtils
 import com.example.schedule_clone.shared.util.tryOffer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.BufferOverflow.DROP_LATEST
+import kotlinx.coroutines.channels.BufferOverflow.DROP_OLDEST
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.flow.SharingStarted.Companion.Lazily
@@ -106,14 +112,26 @@ class ScheduleViewModel @Inject constructor(
             .stateIn(viewModelScope, WhileViewSubscribed, Result.Loading)
 
     val isLoading: StateFlow<Boolean> = loadSessionsResult.mapLatest {
-        it = Result.Loading
-    }.stateIn(viewModelScope, WhileViewSubscribed, ture)
+        it == Result.Loading
+    }.stateIn(viewModelScope, WhileViewSubscribed, true)
 
     // Expose new UI data when loadSessionsResult changes
     val scheduleUiData: StateFlow<ScheduleUiData> =
         loadSessionsResult.combineTransform(timeZoneId) { sessions, timeZone ->
+            sessions.data?.let { data ->
+                dayIndexer = data.dayIndexer
+                emit(
+                    ScheduleUiData(
+                        list = data.userSessions,
+                        dayIndexer = data.dayIndexer,
+                        timeZoneId = timeZone
+                    )
+                )
+            }
+        }.stateIn(viewModelScope, WhileViewSubscribed, ScheduleUiData())
 
-        }
+    private val _swipeRefreshing = MutableStateFlow(false)
+    val swipeRefreshing: StateFlow<Boolean> = _swipeRefreshing
 
     /** Flows for Actions and Events **/
 
@@ -123,7 +141,77 @@ class ScheduleViewModel @Inject constructor(
     val errorMessage: Flow<String> =
         _errorMessage.receiveAsFlow().shareIn(viewModelScope, WhileViewSubscribed)
 
+    // SIDE EFFECTS: Navigation actions
+    private val _navigationActions = Channel<ScheduleNavigationAction>(capacity = Channel.CONFLATED)
+    // Exposed with receiveAsFlow to make sure that only one observer receives updates.
+    val navigationActions = _navigationActions.receiveAsFlow()
+
+    /** Show hint for the schedule if they haven't been shown yet */
+    init {
+        viewModelScope.launch {
+            scheduleUiHintsShownUseCase(Unit).successOr(false).let { scheduleHintsShown ->
+                if (!scheduleHintsShown) {
+                    _navigationActions.tryOffer(ShowScheduleUiHints)
+                }
+            }
+        }
+    }
+
+    // Flags used to indicate if the "scroll to now" feature has been used already.
+    var userHasInteracted = false
+
+    // Flow describing which item to scroll to automatically.
+    // Using a MutableSharedFlow so a new value can be emitted from a user event and so
+    // the values are not replayed.
+    private val currentEventIndex = MutableSharedFlow<Int>(
+        extraBufferCapacity = 1,
+        onBufferOverflow = DROP_OLDEST
+    )
+
+    val scrollToEvent: SharedFlow<ScheduleScrollEvent> =
+        loadSessionsResult.combineTransform(currentEventIndex) { result, currentEventIndex ->
+            if (userHasInteracted) {
+                // Setting smoothScroll to false as it's an unnecessary delay.
+                emit(ScheduleScrollEvent(currentEventIndex, smoothScroll = false))
+            } else {
+                val index = result.data?.firstUnfinishedSessionIndex ?: return@combineTransform
+                if (index != -1) {
+                    // User hasn't interacted yet and conference is happening
+                    emit(ScheduleScrollEvent(index))
+                } else {
+                    // User hasn't interacted but conference not in progress, scroll to first event
+                    emit(ScheduleScrollEvent(currentEventIndex))
+                }
+            }
+        }.shareIn(viewModelScope, WhileViewSubscribed, replay = 0) // Don't replay on rotation
+
+    init {
+        // Subscribe user to schedule updates
+        topicSubscriber.subscribeToScheduleUpdates()
+    }
+
+    fun onSwipeRefresh() {
+        viewModelScope.launch {
+            // Ask repository to fetch new data
+            _swipeRefreshing.emit(true)
+            refreshConferenceDataUseCase(Any())
+            _swipeRefreshing.emit(false)
+        }
+    }
+
     private fun refreshUserSessions() {
         refreshSignal.tryEmit(Unit)
     }
+
+    fun scrollToStartOfDay(day: ConferenceDay){
+        currentEventIndex.tryEmit(dayIndexer.positionForDay(day))
+    }
 }
+
+data class ScheduleUiData(
+    val list: List<UserSession>? = null,
+    val timeZoneId: ZoneId? = null,
+    val dayIndexer: ConferenceDayIndexer? = null
+)
+
+data class ScheduleScrollEvent(val targetPosition: Int, val smoothScroll: Boolean = false)
