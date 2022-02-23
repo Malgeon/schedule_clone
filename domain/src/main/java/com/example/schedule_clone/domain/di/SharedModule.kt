@@ -75,11 +75,11 @@ class SharedModule {
         return DefaultSessionRepository(conferenceDataRepository)
     }
 
-//    @Singleton
-//    @Provides
-//    fun provideUserEventDataSource(): UserEventDataSource {
-//        return FakeUserEventDataSource
-//    }
+    @Singleton
+    @Provides
+    fun provideUserEventDataSource(): UserEventDataSource {
+        return FakeUserEventDataSource
+    }
 //
 //    @Singleton
 //    @Provides
