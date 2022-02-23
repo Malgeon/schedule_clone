@@ -4,7 +4,12 @@ import com.example.schedule_clone.data.BootstrapConferenceDataSource
 import com.example.schedule_clone.domain.userevent.UserEventDataSource
 import com.example.schedule_clone.domain.userevent.UserEventResult
 import com.example.schedule_clone.domain.userevent.UserEventsResult
+import com.example.schedule_clone.domain.users.ReservationRequestAction
+import com.example.schedule_clone.domain.users.ReservationRequestAction.RequestAction
+import com.example.schedule_clone.domain.users.ReservationRequestAction.CancelAction
 import com.example.schedule_clone.domain.users.StarUpdatedStatus
+import com.example.schedule_clone.domain.users.SwapRequestAction
+import com.example.schedule_clone.model.Session
 import com.example.schedule_clone.model.SessionId
 import com.example.schedule_clone.model.reservations.ReservationRequestResult
 import com.example.schedule_clone.model.reservations.ReservationRequestResult.ReservationRequestStatus.RESERVE_SUCCEEDED
@@ -63,4 +68,29 @@ object FakeUserEventDataSource : UserEventDataSource {
         userId: String,
         userEvent: UserEvent
     ): Result<Unit> = Success(Unit)
+
+    override suspend fun requestReservation(
+        userId: String,
+        session: Session,
+        action: ReservationRequestAction
+    ): Result<ReservationRequestAction> =
+        Success(
+            if (action is RequestAction) RequestAction() else CancelAction()
+        )
+
+    override fun getUserEvents(userId: String): List<UserEvent> {
+        return userEvents
+    }
+
+    override suspend fun swapReservation(
+        userId: String,
+        fromSession: Session,
+        toSession: Session
+    ): Result<SwapRequestAction> = Success(SwapRequestAction())
+
+    override fun getUserEvent(userId: String, eventId: SessionId): UserEvent? {
+        return userEvents.firstOrNull { it.id == eventId }
+    }
+
+    override fun clearSingleEventSubscriptions() {}
 }

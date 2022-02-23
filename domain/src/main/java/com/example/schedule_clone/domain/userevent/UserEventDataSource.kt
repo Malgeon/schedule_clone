@@ -13,8 +13,11 @@ import kotlinx.coroutines.flow.Flow
 interface UserEventDataSource {
 
     fun getObservableUserEvents(userId: String): Flow<UserEventsResult>
+
     fun getObservableUserEvent(userId: String, eventId: SessionId): Flow<UserEventResult>
+
     fun getUserEvents(userId: String): List<UserEvent>
+
     fun getUserEvent(userId: String, eventId: SessionId): UserEvent?
 
     /**
@@ -42,6 +45,8 @@ interface UserEventDataSource {
         fromSession: Session,
         toSession: Session
     ): Result<SwapRequestAction>
+
+    fun clearSingleEventSubscriptions()
 }
 
 data class UserEventsResult(
