@@ -45,6 +45,7 @@ dependencies {
 
 
     implementation(project(":presentation"))
+    implementation(project(":data"))
     implementation(project(":shared"))
 
     implementation(Libs.CORE_KTX)
@@ -63,6 +64,8 @@ dependencies {
 
     implementation(Libs.NAVIGATION_FRAGMENT_KTX)
     implementation(Libs.NAVIGATION_UI_KTX)
+
+    implementation(Libs.GSON)
 
     // Dagger Hilt
     implementation(Libs.HILT_ANDROID)

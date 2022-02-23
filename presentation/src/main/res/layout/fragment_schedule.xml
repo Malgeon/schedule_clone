@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -16,128 +15,115 @@
             name="isEmpty"
             type="boolean" />
     </data>
-
-    <FrameLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinator_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text = "연습"/>
-    </FrameLayout>
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appbar"
+            style="@style/Widget.IOSched.AppBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true">
 
-<!--    <androidx.coordinatorlayout.widget.CoordinatorLayout-->
-<!--        android:id="@+id/coordinator_layout"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:fitsSystemWindows="true">-->
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?actionBarSize">
 
-<!--        <com.google.android.material.appbar.AppBarLayout-->
-<!--            android:id="@+id/appbar"-->
-<!--            style="@style/Widget.IOSched.AppBar"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:fitsSystemWindows="true">-->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/day_indicators"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:orientation="horizontal"
+                    app:layoutManager="LinearLayoutManager"
+                    tools:itemCount="3"
+                    tools:listitem="@layout/item_schedule_day_indicator" />
 
-<!--            <androidx.appcompat.widget.Toolbar-->
-<!--                android:id="@+id/toolbar"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="?actionBarSize">-->
+            </androidx.appcompat.widget.Toolbar>
 
-<!--                <androidx.recyclerview.widget.RecyclerView-->
-<!--                    android:id="@+id/day_indicators"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_gravity="center_vertical"-->
-<!--                    android:orientation="horizontal"-->
-<!--                    app:layoutManager="LinearLayoutManager"-->
-<!--                    tools:itemCount="3"-->
-<!--                    tools:listitem="@layout/item_schedule_day_indicator" />-->
+        </com.google.android.material.appbar.AppBarLayout>
 
-<!--            </androidx.appcompat.widget.Toolbar>-->
+        <!-- A view to draw above the AppBarLayout to mimic the status bar -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="?attr/colorSurface"
+            android:fitsSystemWindows="true"
+            app:layout_behavior="com.example.schedule_clone.presentation.util.StatusBarScrimBehavior" />
 
-<!--        </com.google.android.material.appbar.AppBarLayout>-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-<!--        &lt;!&ndash; A view to draw above the AppBarLayout to mimic the status bar &ndash;&gt;-->
-<!--        <View-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="0dp"-->
-<!--            android:background="?attr/colorSurface"-->
-<!--            android:fitsSystemWindows="true"-->
-<!--            app:layout_behavior="com.example.schedule_clone.presentation.util.StatusBarScrimBehavior" />-->
+            <com.example.schedule_clone.presentation.widget.CustomSwipeRefreshLayout
+                android:id="@+id/swipe_refresh_layout"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:onRefreshListener="@{() -> viewModel.onSwipeRefresh()}"
+                app:refreshing="@{viewModel.swipeRefreshing}"
+                app:swipeRefreshColors="@{@intArray/swipe_refresh}">
 
-<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerview_schedule"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    android:orientation="vertical"
+                    android:paddingBottom="@dimen/schedule_page_padding_bottom"
+                    android:paddingTop="@dimen/spacing_normal"
+                    android:scrollbars="vertical"
+                    app:layoutManager="LinearLayoutManager"
+                    tools:listitem="@layout/item_session" />
 
-<!--            <com.example.schedule_clone.presentation.widget.CustomSwipeRefreshLayout-->
-<!--                android:id="@+id/swipe_refresh_layout"-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="0dp"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:layout_constraintLeft_toLeftOf="parent"-->
-<!--                app:layout_constraintRight_toRightOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent"-->
-<!--                app:onRefreshListener="@{() -> viewModel.onSwipeRefresh()}"-->
-<!--                app:refreshing="@{viewModel.swipeRefreshing}"-->
-<!--                app:swipeRefreshColors="@{@intArray/swipe_refresh}">-->
+            </com.example.schedule_clone.presentation.widget.CustomSwipeRefreshLayout>
 
-<!--                <androidx.recyclerview.widget.RecyclerView-->
-<!--                    android:id="@+id/recyclerview_schedule"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="match_parent"-->
-<!--                    android:clipToPadding="false"-->
-<!--                    android:orientation="vertical"-->
-<!--                    android:paddingBottom="@dimen/schedule_page_padding_bottom"-->
-<!--                    android:paddingTop="@dimen/spacing_normal"-->
-<!--                    android:scrollbars="vertical"-->
-<!--                    app:layoutManager="LinearLayoutManager"-->
-<!--                    tools:listitem="@layout/item_session" />-->
+            <TextView
+                android:id="@+id/empty"
+                style="@style/Widget.IOSched.EmptyResults"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/schedule_page_padding_bottom"
+                android:layout_marginHorizontal="@dimen/margin_large"
+                android:text="@string/schedule_filters_empty"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:goneUnless="@{isEmpty &amp;&amp; !viewModel.isLoading}"
+                tools:targetApi="o"
+                tools:visibility="visible" />
 
-<!--            </com.example.schedule_clone.presentation.widget.CustomSwipeRefreshLayout>-->
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-<!--            <TextView-->
-<!--                android:id="@+id/empty"-->
-<!--                style="@style/Widget.IOSched.EmptyResults"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_gravity="center"-->
-<!--                android:layout_marginBottom="@dimen/schedule_page_padding_bottom"-->
-<!--                android:layout_marginHorizontal="@dimen/margin_large"-->
-<!--                android:text="@string/schedule_filters_empty"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:layout_constraintLeft_toLeftOf="parent"-->
-<!--                app:layout_constraintRight_toRightOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent"-->
-<!--                app:goneUnless="@{isEmpty &amp;&amp; !viewModel.isLoading}"-->
-<!--                tools:targetApi="o"-->
-<!--                tools:visibility="visible" />-->
+        <!-- TODO(b/72711711): Provide a better loading indicator -->
+        <ProgressBar
+            android:id="@+id/loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:indeterminateTint="?attr/colorControlLight"
+            app:goneUnless="@{viewModel.isLoading}" />
 
-<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
-
-<!--        &lt;!&ndash; TODO(b/72711711): Provide a better loading indicator &ndash;&gt;-->
-<!--        <ProgressBar-->
-<!--            android:id="@+id/loading"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_gravity="center"-->
-<!--            android:indeterminate="true"-->
-<!--            android:indeterminateTint="?attr/colorControlLight"-->
-<!--            app:goneUnless="@{viewModel.isLoading}" />-->
-
-<!--        &lt;!&ndash; A custom snackbar implementation for more control over positioning i.e. above the-->
-<!--             FAB, to control its entry/exit animation. &ndash;&gt;-->
-<!--        <com.example.schedule_clone.presentation.widget.FadingSnackbar-->
-<!--            android:id="@+id/snackbar"-->
-<!--            android:layout_width="@dimen/snackbar_width"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_gravity="bottom|start"-->
-<!--            android:layout_marginBottom="@dimen/snackbar_margin_bottom_fab"-->
-<!--            android:layout_marginEnd="@dimen/snackbar_margin_end_fab"-->
-<!--            android:visibility="gone" />-->
-
-<!--    </androidx.coordinatorlayout.widget.CoordinatorLayout>-->
-
+        <!-- A custom snackbar implementation for more control over positioning i.e. above the
+             FAB, to control its entry/exit animation. -->
+        <com.example.schedule_clone.presentation.widget.FadingSnackbar
+            android:id="@+id/snackbar"
+            android:layout_width="@dimen/snackbar_width"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|start"
+            android:layout_marginBottom="@dimen/snackbar_margin_bottom_fab"
+            android:layout_marginEnd="@dimen/snackbar_margin_end_fab"
+            android:visibility="gone" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

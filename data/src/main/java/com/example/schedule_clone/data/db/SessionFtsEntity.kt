@@ -11,7 +11,7 @@ import com.example.schedule_clone.model.Session
  * the [ColumnInfo] name is explicitly declared to allow flexibility for renaming the data class
  * properties without requiring changing the column name.
  */
-@Entity(tableName = "sessionFts")
+@Entity(tableName = "sessionsFts")
 @Fts4
 class SessionFtsEntity(
 

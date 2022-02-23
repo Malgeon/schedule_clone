@@ -11,6 +11,8 @@ import androidx.room.RoomDatabase
 @Database(
     entities = [
         SessionFtsEntity::class,
+        SpeakerFtsEntity::class,
+        CodelabFtsEntity::class,
     ],
     version = 1,
     exportSchema = false

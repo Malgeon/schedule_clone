@@ -2,9 +2,12 @@ package com.example.schedule_clone.di
 
 import android.content.Context
 import android.net.ConnectivityManager
+import com.example.schedule_clone.data.db.AppDatabase
 import com.example.schedule_clone.shared.di.ApplicationScope
 import com.example.schedule_clone.shared.di.DefaultDispatcher
 import com.example.schedule_clone.shared.di.MainThreadHandler
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -30,8 +33,6 @@ class AppModule {
         context.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE)
                 as ConnectivityManager
 
-
-
     @ApplicationScope
     @Singleton
     @Provides
@@ -43,5 +44,18 @@ class AppModule {
 //    @Provides
 //    @MainThreadHandler
 //    fun provideMainThreadHandler(): IOSchedHandler = IOSchedMainHandler()
+
+
+    @Singleton
+    @Provides
+    fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
+        return AppDatabase.buildDatabase(context)
+    }
+
+    @Singleton
+    @Provides
+    fun provideGson(): Gson {
+        return GsonBuilder().create()
+    }
 
 }
