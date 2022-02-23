@@ -15,16 +15,19 @@ interface SessionRepository {
 class DefaultSessionRepository @Inject constructor(
     private val conferenceDataRepository: ConferenceDataRepository
 ) : SessionRepository {
+
     override fun getSessions(): List<Session> {
-        TODO("Not yet implemented")
+    return conferenceDataRepository.getOfflineConferenceData().sessions
     }
 
     override fun getSession(eventId: SessionId): Session {
-        TODO("Not yet implemented")
+        return conferenceDataRepository.getOfflineConferenceData().sessions.firstOrNull { session ->
+            session.id == eventId
+        } ?: throw SessionNotFoundException()
     }
 
     override fun getConferenceDays(): List<ConferenceDay> {
-        TODO("Not yet implemented")
+        return conferenceDataRepository.getConferenceDays()
     }
 }
 

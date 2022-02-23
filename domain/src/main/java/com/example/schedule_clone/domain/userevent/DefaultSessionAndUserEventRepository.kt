@@ -31,8 +31,11 @@ class DefaultSessionAndUserEventRepository @Inject constructor(
     private val userEventDataSource: UserEventDataSource,
     private val sessionRepository: SessionRepository
 ) : SessionAndUserEventRepository {
+
     @WorkerThread
-    override fun getObservableUserEvents(userId: String?): Flow<Result<ObservableUserEvent>> {
+    override fun getObservableUserEvents(
+        userId: String?
+    ): Flow<Result<ObservableUserEvent>> {
         return flow {
             emit(Result.Loading)
             // If there no logged-in user, return the map with null UserEvents

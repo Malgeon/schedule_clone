@@ -27,6 +27,7 @@ import com.example.schedule_clone.domain.userevent.UserEventDataSource
 import com.example.schedule_clone.shared.config.AppConfigDataSource
 import com.example.schedule_clone.domain.fake.FakeAppConfigDataSource
 import com.example.schedule_clone.domain.fake.FakeConferenceDataSource
+import com.example.schedule_clone.domain.fake.FakeUserEventDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -80,13 +81,13 @@ class SharedModule {
     fun provideUserEventDataSource(): UserEventDataSource {
         return FakeUserEventDataSource
     }
-//
+
 //    @Singleton
 //    @Provides
 //    fun provideFeedbackEndpoint(): FeedbackEndpoint {
 //        return FakeFeedbackEndpoint
 //    }
-//
+
     @Singleton
     @Provides
     fun provideSessionAndUserEventRepository(
@@ -123,13 +124,13 @@ class SharedModule {
 //    fun provideAnnouncementDataSource(): AnnouncementDataSource {
 //        return FakeAnnouncementDataSource
 //    }
-//
+
 //    @Singleton
 //    @Provides
 //    fun provideMomentDataSource(): MomentDataSource {
 //        return FakeMomentDataSource
 //    }
-//
+
 //    @Singleton
 //    @Provides
 //    fun provideFeedRepository(
@@ -138,13 +139,13 @@ class SharedModule {
 //    ): FeedRepository {
 //        return DefaultFeedRepository(announcementDataSource, momentDataSource)
 //    }
-//
+
 //    @Singleton
 //    @Provides
 //    fun provideArDebugFlagEndpoint(): ArDebugFlagEndpoint {
 //        return FakeArDebugFlagEndpoint
 //    }
-//
+
 //    @Singleton
 //    @Provides
 //    fun provideSessionTextMatchStrategy(
