@@ -45,7 +45,6 @@ class AppModule {
 //    @MainThreadHandler
 //    fun provideMainThreadHandler(): IOSchedHandler = IOSchedMainHandler()
 
-
     @Singleton
     @Provides
     fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
@@ -57,5 +56,4 @@ class AppModule {
     fun provideGson(): Gson {
         return GsonBuilder().create()
     }
-
 }

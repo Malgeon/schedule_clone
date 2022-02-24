@@ -1,4 +1,4 @@
-package com.example.schedule_clone.domain.fake
+package com.example.schedule_clone.domain.fake.userevent
 
 import com.example.schedule_clone.data.BootstrapConferenceDataSource
 import com.example.schedule_clone.domain.userevent.UserEventDataSource

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.schedule_clone.domain.di
+package com.example.schedule_clone.presentation.di
 
 import com.example.schedule_clone.data.ConferenceDataRepository
 import com.example.schedule_clone.data.ConferenceDataSource
@@ -27,7 +27,7 @@ import com.example.schedule_clone.domain.userevent.UserEventDataSource
 import com.example.schedule_clone.shared.config.AppConfigDataSource
 import com.example.schedule_clone.domain.fake.FakeAppConfigDataSource
 import com.example.schedule_clone.domain.fake.FakeConferenceDataSource
-import com.example.schedule_clone.domain.fake.FakeUserEventDataSource
+import com.example.schedule_clone.domain.fake.userevent.FakeUserEventDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -61,9 +61,9 @@ class SharedModule {
     @Singleton
     @Provides
     fun provideConferenceDataRepository(
-    @Named("remoteConfDatasource") remoteDataSource: ConferenceDataSource,
-    @Named("bootstrapConfDataSource") boostrapDataSource: ConferenceDataSource,
-    appDatabase: AppDatabase
+        @Named("remoteConfDatasource") remoteDataSource: ConferenceDataSource,
+        @Named("bootstrapConfDataSource") boostrapDataSource: ConferenceDataSource,
+        appDatabase: AppDatabase
     ): ConferenceDataRepository {
         return ConferenceDataRepository(remoteDataSource, boostrapDataSource, appDatabase)
     }
@@ -91,8 +91,8 @@ class SharedModule {
     @Singleton
     @Provides
     fun provideSessionAndUserEventRepository(
-    userEventDataSource: UserEventDataSource,
-    sessionRepository: SessionRepository
+        userEventDataSource: UserEventDataSource,
+        sessionRepository: SessionRepository
     ): SessionAndUserEventRepository {
         return DefaultSessionAndUserEventRepository(
             userEventDataSource,

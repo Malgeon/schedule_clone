@@ -2,8 +2,15 @@ package com.example.schedule_clone.presentation.signin
 
 import android.net.Uri
 import com.example.schedule_clone.data.signin.AuthenticatedUserInfo
+import com.example.schedule_clone.shared.di.ApplicationScope
+import com.example.schedule_clone.shared.di.IoDispatcher
+import com.example.schedule_clone.shared.di.MainDispatcher
+import com.example.schedule_clone.shared.di.ReservationEnabledFlag
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
+import javax.inject.Inject
 
 enum class SignInNavigationAction {
     RequestSignIn, RequestSignOut, ShowNotificationPreferencesDialog
@@ -69,4 +76,19 @@ interface SignInViewModelDelegate {
     val isUserRegistered: StateFlow<Boolean>
 
     val isUserRegisteredValue: Boolean
+}
+
+/**
+ * Implementation of SignInViewModelDelegate that uses Firebase's auth mechanism.
+ */
+internal class FirebaseSignInViewModelDelegate @Inject constructor(
+    observeUserAuthStateUseCase: ObserveUserAuthStateUseCase,
+    private val notificationsPrefIsShownUseCase: NotificationsPrefIsShownUseCase,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+    @MainDispatcher private val mainDispatcher: CoroutineDispatcher,
+    @ReservationEnabledFlag val isReservationEnabledByRemoteConfig: Boolean,
+    @ApplicationScope val applicationScope: CoroutineScope
+) : SignInViewModelDelegate {
+
+
 }
