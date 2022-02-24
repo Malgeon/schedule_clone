@@ -2,6 +2,7 @@ package com.example.schedule_clone.presentation.signin
 
 import android.net.Uri
 import com.example.schedule_clone.data.signin.AuthenticatedUserInfo
+import com.example.schedule_clone.presentation.auth.ObserveUserAuthStateUseCase
 import com.example.schedule_clone.shared.di.ApplicationScope
 import com.example.schedule_clone.shared.di.IoDispatcher
 import com.example.schedule_clone.shared.di.MainDispatcher
