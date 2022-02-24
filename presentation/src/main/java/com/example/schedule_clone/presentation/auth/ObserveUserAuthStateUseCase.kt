@@ -1,6 +1,8 @@
 package com.example.schedule_clone.presentation.auth
 
 import com.example.schedule_clone.data.signin.AuthenticatedUserInfo
+import com.example.schedule_clone.data.signin.datasources.AuthStateUserDataSource
+import com.example.schedule_clone.data.signin.datasources.RegisteredUserDataSource
 import com.example.schedule_clone.domain.FlowUseCase
 import com.example.schedule_clone.domain.fcm.TopicSubscriber
 import com.example.schedule_clone.shared.di.ApplicationScope
