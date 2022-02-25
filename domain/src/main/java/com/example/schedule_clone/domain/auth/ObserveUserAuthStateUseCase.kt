@@ -1,6 +1,7 @@
-package com.example.schedule_clone.presentation.auth
+package com.example.schedule_clone.domain.auth
 
 import com.example.schedule_clone.data.signin.AuthenticatedUserInfo
+import com.example.schedule_clone.data.signin.AuthenticatedUserInfoBasic
 import com.example.schedule_clone.data.signin.datasources.AuthStateUserDataSource
 import com.example.schedule_clone.data.signin.datasources.RegisteredUserDataSource
 import com.example.schedule_clone.domain.FlowUseCase
@@ -13,6 +14,7 @@ import com.example.schedule_clone.shared.util.cancelIfActive
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.ProducerScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.collect
@@ -57,5 +59,19 @@ open class ObserveUserAuthStateUseCase @Inject constructor(
 
     override fun execute(parameters: Any): Flow<Result<AuthenticatedUserInfo>> {
         TODO("Not yet implemented")
+    }
+
+    private suspend fun ProducerScope<Result<AuthenticatedUserInfo>>.processUserData(
+        userData: AuthenticatedUserInfoBasic
+    ) {
+        if (!userData.isSignedIn()) {
+            userSignedOut(userData)
+        } else if
+    }
+
+    private suspend fun ProducerScope<Result<AuthenticatedUserInfo>>.userSignedOut(
+        userData: AuthenticatedUserInfoBasic?
+    ) {
+        send(Success(FIrebaseReg))
     }
 }
