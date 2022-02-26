@@ -72,6 +72,7 @@ open class ObserveUserAuthStateUseCase @Inject constructor(
     private suspend fun ProducerScope<Result<AuthenticatedUserInfo>>.userSignedOut(
         userData: AuthenticatedUserInfoBasic?
     ) {
-        send(Success(FIrebaseReg))
+        send(Success(FirebaseRegisteredUserInfo(userData, isRegisteredValue)))
+        unscribeFromRegisteredTopic() // Stop receiving notifications for attendees
     }
 }
