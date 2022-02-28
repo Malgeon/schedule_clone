@@ -74,6 +74,10 @@ dependencies {
     kapt(Libs.HILT_COMPILER)
     kaptAndroidTest(Libs.HILT_COMPILER)
 
+    // DataStore
+    implementation(Libs.DATA_STORE_PREFERENCES)
+    androidTestImplementation(Libs.DATA_STORE_PREFERENCES)
+
     testImplementation("junit:junit:4.+")
     androidTestImplementation("androidx.test.ext:junit:1.1.3")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
