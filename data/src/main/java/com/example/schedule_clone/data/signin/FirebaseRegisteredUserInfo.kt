@@ -12,101 +12,60 @@ class FirebaseRegisteredUserInfo(
     private val isRegistered: Boolean?
 ) : AuthenticatedUserInfo {
 
-    override fun isSignedIn(): Boolean = isRegistered ?: false
+    override fun isRegistered(): Boolean = isRegistered ?: false
 
-    override fun getEmail(): String? {
-        TODO("Not yet implemented")
-    }
+    override fun isSignedIn(): Boolean = basicUserInfo?.isSignedIn() == true
 
-    override fun getProviderData(): MutableList<out UserInfo>? {
-        TODO("Not yet implemented")
-    }
+    override fun getEmail(): String? = basicUserInfo?.getEmail()
 
-    override fun getLastSignInTimestamp(): Long? {
-        TODO("Not yet implemented")
-    }
+    override fun getProviderData(): MutableList<out UserInfo>? = basicUserInfo?.getProviderData()
 
-    override fun getCreationTimestamp(): Long? {
-        TODO("Not yet implemented")
-    }
+    override fun isAnonymous(): Boolean? = basicUserInfo?.isAnonymous()
 
-    override fun isAnonymous(): Boolean? {
-        TODO("Not yet implemented")
-    }
+    override fun getPhoneNumber(): String? = basicUserInfo?.getPhoneNumber()
 
-    override fun getPhoneNumber(): String? {
-        TODO("Not yet implemented")
-    }
+    override fun getUid(): String? = basicUserInfo?.getUid()
 
-    override fun getUid(): String? {
-        TODO("Not yet implemented")
-    }
+    override fun isEmailVerified(): Boolean? = basicUserInfo?.isEmailVerified()
 
-    override fun isEmailVerified(): String? {
-        TODO("Not yet implemented")
-    }
+    override fun getDisplayName(): String? = basicUserInfo?.getDisplayName()
 
-    override fun getPhotoUrl(): Uri? {
-        TODO("Not yet implemented")
-    }
+    override fun getPhotoUrl(): Uri? = basicUserInfo?.getPhotoUrl()
 
-    override fun getProviderId(): String? {
-        TODO("Not yet implemented")
-    }
+    override fun getProviderId(): String? = basicUserInfo?.getProviderId()
 
-    override fun isRegistered(): Boolean {
-        TODO("Not yet implemented")
-    }
+    override fun getLastSignInTimestamp(): Long? = basicUserInfo?.getLastSignInTimestamp()
 
-    override fun isRegistrationDataReady(): Boolean {
-        TODO("Not yet implemented")
-    }
+    override fun getCreationTimestamp(): Long? = basicUserInfo?.getCreationTimestamp()
+
+    override fun isRegistrationDataReady(): Boolean = isRegistered != null
 }
 
 open class FirebaseUserInfo(
     private val firebaseUser: FirebaseUser?
 ) : AuthenticatedUserInfoBasic {
-    override fun isSignedIn(): Boolean {
-        TODO("Not yet implemented")
-    }
 
-    override fun getEmail(): String? {
-        TODO("Not yet implemented")
-    }
+    override fun isSignedIn(): Boolean = firebaseUser != null
 
-    override fun getProviderData(): MutableList<out UserInfo>? {
-        TODO("Not yet implemented")
-    }
+    override fun getEmail(): String? = firebaseUser?.email
 
-    override fun getLastSignInTimestamp(): Long? {
-        TODO("Not yet implemented")
-    }
+    override fun getProviderData(): MutableList<out UserInfo>? = firebaseUser?.providerData
 
-    override fun getCreationTimestamp(): Long? {
-        TODO("Not yet implemented")
-    }
+    override fun isAnonymous(): Boolean? = firebaseUser?.isAnonymous
 
-    override fun isAnonymous(): Boolean? {
-        TODO("Not yet implemented")
-    }
+    override fun getPhoneNumber(): String? = firebaseUser?.phoneNumber
 
-    override fun getPhoneNumber(): String? {
-        TODO("Not yet implemented")
-    }
+    override fun getUid(): String? = firebaseUser?.uid
 
-    override fun getUid(): String? {
-        TODO("Not yet implemented")
-    }
+    override fun isEmailVerified(): Boolean? = firebaseUser?.isEmailVerified
 
-    override fun isEmailVerified(): String? {
-        TODO("Not yet implemented")
-    }
+    override fun getDisplayName(): String? = firebaseUser?.displayName
 
-    override fun getPhotoUrl(): Uri? {
-        TODO("Not yet implemented")
-    }
+    override fun getPhotoUrl(): Uri? = firebaseUser?.photoUrl
 
-    override fun getProviderId(): String? {
-        TODO("Not yet implemented")
-    }
+    override fun getProviderId(): String? = firebaseUser?.providerId
+
+    override fun getLastSignInTimestamp(): Long? = firebaseUser?.metadata?.lastSignInTimestamp
+
+    override fun getCreationTimestamp(): Long? = firebaseUser?.metadata?.creationTimestamp
 }

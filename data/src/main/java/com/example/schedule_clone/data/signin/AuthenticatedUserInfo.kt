@@ -31,7 +31,9 @@ interface AuthenticatedUserInfoBasic {
 
     fun getUid(): String?
 
-    fun isEmailVerified(): String?
+    fun isEmailVerified(): Boolean?
+
+    fun getDisplayName(): String?
 
     fun getPhotoUrl(): Uri?
 

@@ -2,6 +2,7 @@ package com.example.schedule_clone.domain.auth
 
 import com.example.schedule_clone.data.signin.AuthenticatedUserInfo
 import com.example.schedule_clone.data.signin.AuthenticatedUserInfoBasic
+import com.example.schedule_clone.data.signin.FirebaseRegisteredUserInfo
 import com.example.schedule_clone.data.signin.datasources.AuthStateUserDataSource
 import com.example.schedule_clone.data.signin.datasources.RegisteredUserDataSource
 import com.example.schedule_clone.domain.FlowUseCase
