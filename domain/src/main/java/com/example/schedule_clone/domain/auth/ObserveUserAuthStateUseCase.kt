@@ -11,14 +11,16 @@ import com.example.schedule_clone.shared.di.ApplicationScope
 import com.example.schedule_clone.shared.di.IoDispatcher
 import com.example.schedule_clone.shared.result.Result
 import com.example.schedule_clone.shared.result.Result.Success
+import com.example.schedule_clone.shared.result.data
 import com.example.schedule_clone.shared.util.cancelIfActive
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.ProducerScope
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
+import java.lang.Exception
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -45,21 +47,33 @@ open class ObserveUserAuthStateUseCase @Inject constructor(
     // flow, a callbackFlow is used
     private val authStateChanges = callbackFlow<Result<AuthenticatedUserInfo>> {
         authStateUserDataSource.getBasicUserInfo().collect { userResult ->
-        // Cancel observing previous user registered changes
-        observeUserRegisteredChangeJob.cancelIfActive()'
+            // Cancel observing previous user registered changes
+            observeUserRegisteredChangeJob.cancelIfActive()
 
-            if(userResult is Success) {
+            if (userResult is Success) {
                 if (userResult.data != null) {
-                    processUserData
+                    processUserData(userResult.data)
+                } else {
+                    send(Success(FirebaseRegisteredUserInfo(null, false)))
                 }
+            } else {
+                send(Result.Error(Exception("FirebaseAuth error")))
             }
-
         }
 
+        // Always wait for the flow to be closed. Specially important for tests.
+        awaitClose { observeUserRegisteredChangeJob.cancelIfActive() }
+    }
+        .shareIn(externalScope, SharingStarted.WhileSubscribed())
+
+    override fun execute(parameters: Any): Flow<Result<AuthenticatedUserInfo>> = authStateChanges
+
+    private fun subscribeToRegisteredTopic() {
+        topicSubscriber.subscribeToScheduleUpdates()
     }
 
-    override fun execute(parameters: Any): Flow<Result<AuthenticatedUserInfo>> {
-        TODO("Not yet implemented")
+    private fun unsubscribeFromRegisteredTopic() {
+        topicSubscriber.unsubscribeFromAttendeeUpdates()
     }
 
     private suspend fun ProducerScope<Result<AuthenticatedUserInfo>>.processUserData(
@@ -67,13 +81,37 @@ open class ObserveUserAuthStateUseCase @Inject constructor(
     ) {
         if (!userData.isSignedIn()) {
             userSignedOut(userData)
-        } else if
+        } else if (userData.getUid() != null) {
+            userSignedIn(userData.getUid()!!, userData)
+        } else {
+            send(Success(FirebaseRegisteredUserInfo(userData, false)))
+        }
+    }
+
+    private suspend fun ProducerScope<Result<AuthenticatedUserInfo>>.userSignedIn(
+        userId: String,
+        userData: AuthenticatedUserInfoBasic
+    ) {
+        // Observing the user registration changes from another scope to able to listen
+        // for this and updates to getBasicUserInfo() simultaneously
+        observeUserRegisteredChangeJob = externalScope.launch(ioDispatcher) {
+            // Start observing the user in Firestore to fetch the 'registered' flag
+            registeredUserDataSource.observeUserChanges(userId).collect { result ->
+                val isRegisteredValue: Boolean? = result.data
+                // When there's new user data and the user is an attendee, subscribe to topic:
+                if (isRegisteredValue == true && userData.isSignedIn()) {
+                    subscribeToRegisteredTopic()
+                }
+
+                send(Success(FirebaseRegisteredUserInfo(userData, isRegisteredValue)))
+            }
+        }
     }
 
     private suspend fun ProducerScope<Result<AuthenticatedUserInfo>>.userSignedOut(
         userData: AuthenticatedUserInfoBasic?
     ) {
-        send(Success(FirebaseRegisteredUserInfo(userData, isRegisteredValue)))
-        unscribeFromRegisteredTopic() // Stop receiving notifications for attendees
+        send(Success(FirebaseRegisteredUserInfo(userData, false)))
+        unsubscribeFromRegisteredTopic() // Stop receiving notifications for attendees
     }
 }
