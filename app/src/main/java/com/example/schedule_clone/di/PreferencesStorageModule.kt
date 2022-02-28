@@ -1,7 +1,10 @@
 package com.example.schedule_clone.di
 
 import android.content.Context
+import androidx.datastore.preferences.SharedPreferencesMigration
+import androidx.datastore.preferences.preferencesDataStore
 import com.example.schedule_clone.data.pref.DataStorePreferenceStorage
+import com.example.schedule_clone.data.pref.PreferenceStorage
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
