@@ -3,14 +3,23 @@ package com.example.schedule_clone.presentation.signin
 import android.net.Uri
 import com.example.schedule_clone.data.signin.AuthenticatedUserInfo
 import com.example.schedule_clone.domain.auth.ObserveUserAuthStateUseCase
+import com.example.schedule_clone.domain.prefs.NotificationsPrefIsShownUseCase
+import com.example.schedule_clone.presentation.signin.SignInNavigationAction.*
+import com.example.schedule_clone.presentation.util.WhileViewSubscribed
 import com.example.schedule_clone.shared.di.ApplicationScope
 import com.example.schedule_clone.shared.di.IoDispatcher
 import com.example.schedule_clone.shared.di.MainDispatcher
 import com.example.schedule_clone.shared.di.ReservationEnabledFlag
+import com.example.schedule_clone.shared.result.Result
+import com.example.schedule_clone.shared.result.data
+import com.example.schedule_clone.shared.util.tryOffer
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import timber.log.Timber
 import javax.inject.Inject
 
 enum class SignInNavigationAction {
@@ -91,5 +100,70 @@ internal class FirebaseSignInViewModelDelegate @Inject constructor(
     @ApplicationScope val applicationScope: CoroutineScope
 ) : SignInViewModelDelegate {
 
+    private val _signInNavigationActions = Channel<SignInNavigationAction>(Channel.CONFLATED)
+    override val signInNavigationActions = _signInNavigationActions.receiveAsFlow()
+
+    private val currentFirebaseUser: Flow<Result<AuthenticatedUserInfo?>> =
+        observeUserAuthStateUseCase(Any()).map {
+            if (it is Result.Error) {
+                Timber.e(it.exception)
+            }
+            it
+        }
+
+    override val userInfo: StateFlow<AuthenticatedUserInfo?> = currentFirebaseUser.map {
+        (it as? Result.Success)?.data
+    }.stateIn(applicationScope, WhileViewSubscribed, null)
+
+    override val currentUserImageUri: StateFlow<Uri?> = userInfo.map {
+        it?.getPhotoUrl()
+    }.stateIn(applicationScope, WhileViewSubscribed, null)
+
+    override val isUserSignedIn: StateFlow<Boolean> = userInfo.map {
+        it?.isSignedIn() ?: false
+    }.stateIn(applicationScope, WhileViewSubscribed, false)
+
+    override val isUserRegistered: StateFlow<Boolean> = userInfo.map {
+        it?.isRegistered() ?: false
+    }.stateIn(applicationScope, WhileViewSubscribed, false)
+
+    init {
+        applicationScope.launch {
+            userInfo.collect {
+                if (notificationsPrefIsShownUseCase(Unit).data == false && isUserSignedInValue) {
+                    _signInNavigationActions.tryOffer(ShowNotificationPreferencesDialog)
+                }
+            }
+        }
+    }
+
+    override val showReservations: StateFlow<Boolean> = userInfo.map {
+        (isUserRegisteredValue || !isUserSignedInValue) &&
+                isReservationEnabledByRemoteConfig
+    }.stateIn(applicationScope, WhileViewSubscribed, false)
+
+    override suspend fun emitSignInRequest(): Unit = withContext(ioDispatcher) {
+        // Refresh the notificationsPrefIsShown because it's used to indicate if the
+        // notifications preference dialog should be shown
+        notificationsPrefIsShownUseCase(Unit)
+        _signInNavigationActions.tryOffer(RequestSignIn)
+    }
+
+    override suspend fun emitSignOutRequest(): Unit = withContext(mainDispatcher) {
+        _signInNavigationActions.tryOffer(RequestSignOut)
+    }
+
+    override val isUserSignedInValue: Boolean
+        get() = isUserSignedIn.value
+
+    override val isUserRegisteredValue: Boolean
+        get() = isUserRegistered.value
+
+    override val userIdValue: String?
+        get() = userInfo.value?.getUid()
+
+    override val userId: Flow<String?>
+        get() = userInfo.mapLatest { it?.getUid() }
+            .stateIn(applicationScope, WhileViewSubscribed, null)
 
 }

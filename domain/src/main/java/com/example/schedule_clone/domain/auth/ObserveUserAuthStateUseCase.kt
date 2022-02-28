@@ -51,8 +51,9 @@ open class ObserveUserAuthStateUseCase @Inject constructor(
             observeUserRegisteredChangeJob.cancelIfActive()
 
             if (userResult is Success) {
-                if (userResult.data != null) {
-                    processUserData(userResult.data)
+                val data = userResult.data
+                if (data != null) {
+                    processUserData(data)
                 } else {
                     send(Success(FirebaseRegisteredUserInfo(null, false)))
                 }
