@@ -28,6 +28,8 @@ import com.example.schedule_clone.shared.config.AppConfigDataSource
 import com.example.schedule_clone.domain.fake.FakeAppConfigDataSource
 import com.example.schedule_clone.domain.fake.FakeConferenceDataSource
 import com.example.schedule_clone.domain.fake.userevent.FakeUserEventDataSource
+import com.example.schedule_clone.domain.fcm.StagingTopicSubscriber
+import com.example.schedule_clone.domain.fcm.TopicSubscriber
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -100,11 +102,11 @@ class SharedModule {
         )
     }
 
-//    @Singleton
-//    @Provides
-//    fun provideTopicSubscriber(): TopicSubscriber {
-//        return StagingTopicSubscriber()
-//    }
+    @Singleton
+    @Provides
+    fun provideTopicSubscriber(): TopicSubscriber {
+        return StagingTopicSubscriber()
+    }
 
     @Singleton
     @Provides
