@@ -49,6 +49,25 @@ class FirebaseAnalyticsHelper(
             // Analytics based on the "anonymous data collection" setting.
             logSendUsageStatsFlagChanges()
         }
+
+        externalScope.launch {
+            // The listener will initialize Analytics when the TOS is signed, or enable/disable
+            // Analytics based on the "anonymous data collection" setting.
+            logSendUsageStatsFlagChanges()
+        }
+
+        externalScope.launch {
+            signInViewModelDelegate.isUserSignedIn.collect { signedIn ->
+                setUserSignedIn(signedIn)
+                Timber.d("Updated user signed in to $signedIn")
+            }
+        }
+        externalScope.launch {
+            signInViewModelDelegate.isUserRegistered.collect { registered ->
+                setUserRegistered(registered)
+                Timber.d("Updated user registered to $registered")
+            }
+        }
     }
 
     override fun sendScreenView(screenName: String, activity: Activity) {
@@ -63,7 +82,22 @@ class FirebaseAnalyticsHelper(
     }
 
     override fun logUiEvent(itemId: String, action: String) {
-        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM) {}
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM) {
+            param(FirebaseAnalytics.Param.ITEM_ID, itemId)
+            param(FirebaseAnalytics.Param.CONTENT_TYPE, FA_CONTENT_TYPE_UI_EVENT)
+            param(FA_KEY_UI_ACTION, action)
+        }
+        Timber.d("Event recorded for $itemId, $action")
+    }
+
+    override fun setUserSignedIn(isSignedIn: Boolean) {
+        // todo : Set up user properties in both dev and prod
+        firebaseAnalytics.setUserProperty(UPROP_USER_SIGNED_IN, isSignedIn.toString())
+    }
+
+    override fun setUserRegistered(isRegistered: Boolean) {
+        // todo : Set up user properties in both dev and prod
+        firebaseAnalytics.setUserProperty(UPROP_USER_REGISTERED, isRegistered.toString())
     }
 
     /**
