@@ -11,6 +11,7 @@ import com.example.schedule_clone.domain.sessions.ConferenceDayIndexer
 import com.example.schedule_clone.model.ConferenceDay
 import com.example.schedule_clone.presentation.databinding.FragmentScheduleBinding
 import com.example.schedule_clone.presentation.util.launchAndRepeatWithViewLifecycle
+import com.example.schedule_clone.presentation.widget.BubbleDecoration
 import com.example.schedule_clone.presentation.widget.FadingSnackbar
 import com.example.schedule_clone.shared.util.TimeUtils
 import dagger.hilt.android.AndroidEntryPoint
@@ -61,7 +62,7 @@ class ScheduleFragment : Fragment() {
 
         launchAndRepeatWithViewLifecycle {
             launch {
-                scheduleViewModel.scheduleUiData.collect { updateScheduleUi(it)}
+                scheduleViewModel.scheduleUiData.collect { updateScheduleUi(it) }
             }
         }
     }
