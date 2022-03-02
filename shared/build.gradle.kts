@@ -78,6 +78,8 @@ dependencies {
 
     // Firebase
     api(Libs.FIREBASE_CONFIG)
+    api(Libs.FIREBASE_ANALYTICS)
+
 
     testImplementation("junit:junit:4.+")
     androidTestImplementation("androidx.test.ext:junit:1.1.3")

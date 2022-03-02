@@ -64,6 +64,8 @@ dependencies {
     implementation(Libs.CONSTRAINT_LAYOUT)
     implementation(Libs.DRAWER_LAYOUT)
     implementation(Libs.MATERIAL)
+    implementation(Libs.FLEXBOX)
+
 
     // Architecture Components
     implementation(Libs.LIFECYCLE_LIVE_DATA_KTX)

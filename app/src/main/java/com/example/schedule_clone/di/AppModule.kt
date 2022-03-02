@@ -3,6 +3,9 @@ package com.example.schedule_clone.di
 import android.content.Context
 import android.net.ConnectivityManager
 import com.example.schedule_clone.data.db.AppDatabase
+import com.example.schedule_clone.data.pref.PreferenceStorage
+import com.example.schedule_clone.presentation.signin.SignInViewModelDelegate
+import com.example.schedule_clone.shared.analytics.AnalyticsHelper
 import com.example.schedule_clone.shared.di.ApplicationScope
 import com.example.schedule_clone.shared.di.DefaultDispatcher
 import com.example.schedule_clone.shared.di.MainThreadHandler
@@ -44,6 +47,15 @@ class AppModule {
 //    @Provides
 //    @MainThreadHandler
 //    fun provideMainThreadHandler(): IOSchedHandler = IOSchedMainHandler()
+
+    @Singleton
+    @Provides
+    fun provideAnalyticsHelper(
+        @ApplicationScope applicationScope: CoroutineScope,
+        signInDelegate: SignInViewModelDelegate,
+        preferenceStorage: PreferenceStorage
+    ): AnalyticsHelper =
+        FirebaseAnayticsHelper(applicationScope, signInDelegate, preferenceStorage)
 
     @Singleton
     @Provides

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.schedule_clone.domain.sessions.ConferenceDayIndexer
 import com.example.schedule_clone.model.ConferenceDay
 import com.example.schedule_clone.presentation.databinding.FragmentScheduleBinding
+import com.example.schedule_clone.presentation.sessioncommon.SessionsAdapter
 import com.example.schedule_clone.presentation.util.launchAndRepeatWithViewLifecycle
 import com.example.schedule_clone.presentation.widget.BubbleDecoration
 import com.example.schedule_clone.presentation.widget.FadingSnackbar
@@ -61,6 +62,15 @@ class ScheduleFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Session list configuration
+        sessionsAdapter = SessionsAdapter(
+            tagViewPool,
+            scheduleViewModel.showReservations,
+            scheduleViewModel.timeZoneId,
+            viewLifecycleOwner,
+            schedu
+        )
+
         launchAndRepeatWithViewLifecycle {
             launch {
                 scheduleViewModel.scheduleUiData.collect { updateScheduleUi(it) }
@@ -83,6 +93,8 @@ class ScheduleFragment : Fragment() {
             cachedBubbleRange = -1..-1
             rebuildDayIndicators()
         }
+
+        sessionsAdapter.submitList(list)
 
         scheduleRecyclerView.run {
             // Recreate the decoration used for the sticky time headers

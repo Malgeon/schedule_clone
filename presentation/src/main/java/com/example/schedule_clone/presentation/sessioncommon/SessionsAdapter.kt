@@ -1,5 +1,6 @@
 package com.example.schedule_clone.presentation.sessioncommon
 
+import android.se.omapi.Session
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
@@ -9,8 +10,9 @@ import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.schedule_clone.model.userdata.UserSession
 import com.example.schedule_clone.presentation.databinding.ItemSessionBinding
+import com.google.android.flexbox.FlexboxLayoutManager
 import kotlinx.coroutines.flow.StateFlow
-import java.time.ZoneId
+import org.threeten.bp.ZoneId
 
 class SessionsAdapter(
     private val tagViewPool: RecycledViewPool,
@@ -27,9 +29,23 @@ class SessionsAdapter(
         ).apply {
             tags.apply {
                 setRecycledViewPool(tagViewPool)
-                layoutManager = FlexboxLayoutManager
+                layoutManager = FlexboxLayoutManager(parent.context).apply {
+                    recycleChildrenOnDetach = true
+                }
             }
+            showReservations = this@SessionsAdapter.showReservations
+            timeZoneId = this@SessionsAdapter.timeZoneId
+            showTime = false
+            lifecycleOwner = this@SessionsAdapter.lifecycleOwner
+            sessionClickListener = onSessionClickListener
+            sessionStarClickListener = onSessionStartClickListener
         }
+        return SessionViewHolder(binding)
+    }
+
+    override fun onBindViewHolder(holder: SessionViewHolder, position: Int) {
+        holder.binding.userSession = getItem(position)
+        holder.binding.executePendingBindings()
     }
 }
 
