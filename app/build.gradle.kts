@@ -62,7 +62,7 @@ dependencies {
     implementation(Libs.FRAGMENT_KTX)
     implementation(Libs.CONSTRAINT_LAYOUT)
     implementation(Libs.MATERIAL)
-
+    implementation(Libs.FLEXBOX)
     implementation(Libs.NAVIGATION_FRAGMENT_KTX)
     implementation(Libs.NAVIGATION_UI_KTX)
     implementation(Libs.ROOM_KTX)

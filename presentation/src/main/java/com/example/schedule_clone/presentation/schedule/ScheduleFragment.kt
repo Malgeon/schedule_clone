@@ -32,6 +32,7 @@ class ScheduleFragment : Fragment() {
     private lateinit var snackbar: FadingSnackbar
 
     private lateinit var scheduleRecyclerView: RecyclerView
+    private lateinit var sessionsAdapter: SessionsAdapter
 
     private lateinit var dayIndicatorRecyclerView: RecyclerView
     private lateinit var dayIndicatorAdapter: DayIndicatorAdapter
@@ -83,6 +84,9 @@ class ScheduleFragment : Fragment() {
             rebuildDayIndicators()
         }
 
+        scheduleRecyclerView.run {
+            // Recreate the decoration used for the sticky time headers
+        }
     }
 
     private fun rebuildDayIndicators() {
@@ -99,6 +103,6 @@ class ScheduleFragment : Fragment() {
         }
 
         dayIndicatorAdapter.submitList(indicators)
-        dayIndicatorItemDecoration
+        dayIndicatorItemDecoration.bubbleRange = bubbleRange
     }
 }
