@@ -35,7 +35,7 @@ class DefaultSessionAndUserEventRepository @Inject constructor(
     @WorkerThread
     override fun getObservableUserEvents(
         userId: String?
-    ): Flow<Result<ObservableUserEvent>> {
+    ): Flow<Result<ObservableUserEvents>> {
         return flow {
             emit(Result.Loading)
             // If there no logged-in user, return the map with null UserEvents
@@ -48,7 +48,7 @@ class DefaultSessionAndUserEventRepository @Inject constructor(
                 val userSessions = mergeUserDataAndSessions(null, allSessions)
                 emit(
                     Result.Success(
-                        ObservableUserEvent(
+                        ObservableUserEvents(
                             userSessions = userSessions
                         )
                     )
@@ -68,7 +68,7 @@ class DefaultSessionAndUserEventRepository @Inject constructor(
                             it.id == userEvents.userEventsMessage?.sessionId
                         }
                         Result.Success(
-                            ObservableUserEvent(
+                            ObservableUserEvents(
                                 userSessions = userSessions,
                                 userMessage = userEvents.userEventsMessage,
                                 userMessageSession = userEventsMessageSession
@@ -227,7 +227,7 @@ interface SessionAndUserEventRepository {
     // TODO(b/122112739): Repository should not have source dependency on UseCase result
     fun getObservableUserEvents(
         userId: String?
-    ): Flow<Result<ObservableUserEvent>>
+    ): Flow<Result<ObservableUserEvents>>
 
     // TODO(b/122112739): Repository should not have source dependency on UseCase result
     fun getObservableUserEvent(
@@ -261,7 +261,7 @@ interface SessionAndUserEventRepository {
     fun getUserSession(userId: String, sessionId: SessionId): UserSession
 }
 
-data class ObservableUserEvent(
+data class ObservableUserEvents(
     val userSessions: List<UserSession>,
 
     /** A message to show to the user with important changes like reservation confirmations */
