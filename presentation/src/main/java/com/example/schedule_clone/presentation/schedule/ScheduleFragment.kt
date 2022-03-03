@@ -83,6 +83,9 @@ class ScheduleFragment : Fragment() {
             scheduleTwoPaneViewModel,
             scheduleTwoPaneViewModel
         )
+        scheduleRecyclerView.apply {
+            adapter = sessionsAdapter
+        }
 
         launchAndRepeatWithViewLifecycle {
             launch {

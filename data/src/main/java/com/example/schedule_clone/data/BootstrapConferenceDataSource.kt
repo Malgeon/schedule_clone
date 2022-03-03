@@ -10,7 +10,7 @@ object BootstrapConferenceDataSource : ConferenceDataSource {
     }
 
     override fun getOfflineConferenceData(): ConferenceData? {
-    return loadAndParseBootstrapData()
+        return loadAndParseBootstrapData()
     }
 
     fun loadAndParseBootstrapData(): ConferenceData {
