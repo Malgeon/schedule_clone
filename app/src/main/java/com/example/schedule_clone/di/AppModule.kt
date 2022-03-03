@@ -9,6 +9,7 @@ import com.example.schedule_clone.shared.analytics.AnalyticsHelper
 import com.example.schedule_clone.shared.di.ApplicationScope
 import com.example.schedule_clone.shared.di.DefaultDispatcher
 import com.example.schedule_clone.shared.di.MainThreadHandler
+import com.example.schedule_clone.util.FirebaseAnalyticsHelper
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -55,7 +56,7 @@ class AppModule {
         signInDelegate: SignInViewModelDelegate,
         preferenceStorage: PreferenceStorage
     ): AnalyticsHelper =
-        FirebaseAnayticsHelper(applicationScope, signInDelegate, preferenceStorage)
+        FirebaseAnalyticsHelper(applicationScope, signInDelegate, preferenceStorage)
 
     @Singleton
     @Provides

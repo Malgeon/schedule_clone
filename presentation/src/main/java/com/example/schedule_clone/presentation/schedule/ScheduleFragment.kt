@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.example.schedule_clone.domain.sessions.ConferenceDayIndexer
@@ -14,10 +15,13 @@ import com.example.schedule_clone.presentation.sessioncommon.SessionsAdapter
 import com.example.schedule_clone.presentation.util.launchAndRepeatWithViewLifecycle
 import com.example.schedule_clone.presentation.widget.BubbleDecoration
 import com.example.schedule_clone.presentation.widget.FadingSnackbar
+import com.example.schedule_clone.shared.analytics.AnalyticsHelper
 import com.example.schedule_clone.shared.util.TimeUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import javax.inject.Inject
+import javax.inject.Named
 
 @AndroidEntryPoint
 class ScheduleFragment : Fragment() {
@@ -28,7 +32,15 @@ class ScheduleFragment : Fragment() {
         private const val DIALOG_SCHEDULE_HINTS = "dialog_need_to_sign_in"
     }
 
+    @Inject
+    lateinit var analyticsHelper: AnalyticsHelper
+
+    @Inject
+    @field:Named("tagViewPool")
+    lateinit var tagViewPool: RecyclerView.RecycledViewPool
+
     private val scheduleViewModel: ScheduleViewModel by viewModels()
+    private val scheduleTwoPaneViewModel: ScheduleTwoPaneViewModel by activityViewModels()
 
     private lateinit var snackbar: FadingSnackbar
 
@@ -68,7 +80,8 @@ class ScheduleFragment : Fragment() {
             scheduleViewModel.showReservations,
             scheduleViewModel.timeZoneId,
             viewLifecycleOwner,
-            schedu
+            scheduleTwoPaneViewModel,
+            scheduleTwoPaneViewModel
         )
 
         launchAndRepeatWithViewLifecycle {
