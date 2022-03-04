@@ -30,6 +30,7 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.flow.SharingStarted.Companion.Lazily
 import kotlinx.coroutines.launch
 import org.threeten.bp.ZoneId
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -72,6 +73,7 @@ class ScheduleViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             observeConferenceDataUseCase(Unit).collect {
+                Timber.e("observing")
                 refreshUserSessions()
             }
         }
