@@ -9,6 +9,7 @@ import com.example.schedule_clone.model.ConferenceDay
 import com.example.schedule_clone.shared.util.TimeUtils
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import timber.log.Timber
 import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Named
@@ -102,6 +103,7 @@ open class ConferenceDataRepository @Inject constructor(
     }
 
     open fun populateSearchData(conferenceData: ConferenceData) {
+        Timber.e("data populate")
         val sessionFtsEntities = conferenceData.sessions.map { session ->
             SessionFtsEntity(
                 sessionId = session.id,
