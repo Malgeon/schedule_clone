@@ -33,4 +33,8 @@ class ScheduleTwoPaneViewModel @Inject constructor(
     override fun openEventDetail(id: SessionId) {
         _selectSessionEvents.tryOffer(id)
     }
+
+    fun setIsTwoPane(isTwoPane: Boolean) {
+        _isTwoPane.value = isTwoPane
+    }
 }
