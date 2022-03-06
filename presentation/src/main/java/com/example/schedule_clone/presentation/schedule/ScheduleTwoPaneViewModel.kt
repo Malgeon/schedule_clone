@@ -30,11 +30,16 @@ class ScheduleTwoPaneViewModel @Inject constructor(
     private val _selectSessionEvents = Channel<SessionId>(capacity = Channel.CONFLATED)
     val selectSessionEvents = _selectSessionEvents
 
+    fun setIsTwoPane(isTwoPane: Boolean) {
+        _isTwoPane.value = isTwoPane
+    }
+
+    fun returnToListPane() {
+        _returnToListPaneEvents.tryOffer(Unit)
+    }
+
     override fun openEventDetail(id: SessionId) {
         _selectSessionEvents.tryOffer(id)
     }
 
-    fun setIsTwoPane(isTwoPane: Boolean) {
-        _isTwoPane.value = isTwoPane
-    }
 }
