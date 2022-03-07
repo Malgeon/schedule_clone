@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.RecyclerView
 import com.example.schedule_clone.domain.sessions.ConferenceDayIndexer
 import com.example.schedule_clone.model.ConferenceDay
@@ -85,6 +86,13 @@ class ScheduleFragment : Fragment() {
         )
         scheduleRecyclerView.apply {
             adapter = sessionsAdapter
+            (itemAnimator as DefaultItemAnimator).run {
+                supportsChangeAnimations = false
+                addDuration = 160L
+                moveDuration = 160L
+                changeDuration = 160L
+                removeDuration = 120L
+            }
         }
 
         launchAndRepeatWithViewLifecycle {
