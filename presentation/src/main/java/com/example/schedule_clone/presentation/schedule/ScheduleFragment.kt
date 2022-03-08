@@ -7,10 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.RecyclerView
 import com.example.schedule_clone.domain.sessions.ConferenceDayIndexer
 import com.example.schedule_clone.model.ConferenceDay
+import com.example.schedule_clone.presentation.MainActivityViewModel
 import com.example.schedule_clone.presentation.R
 import com.example.schedule_clone.presentation.databinding.FragmentScheduleBinding
 import com.example.schedule_clone.presentation.sessioncommon.SessionsAdapter
@@ -51,6 +53,7 @@ class ScheduleFragment : Fragment() {
 
     private val scheduleViewModel: ScheduleViewModel by viewModels()
     private val scheduleTwoPaneViewModel: ScheduleTwoPaneViewModel by activityViewModels()
+    private val mainActivityViewModel: MainActivityViewModel by activityViewModels()
 
     private lateinit var snackbar: FadingSnackbar
 
@@ -99,7 +102,7 @@ class ScheduleFragment : Fragment() {
             }
         }
 
-        binding.toolbar.setupProfileMenuItem()
+        binding.toolbar.setupProfileMenuItem(mainActivityViewModel, this)
 
         // Session list configuration
         sessionsAdapter = SessionsAdapter(
@@ -166,5 +169,9 @@ class ScheduleFragment : Fragment() {
 
         dayIndicatorAdapter.submitList(indicators)
         dayIndicatorItemDecoration.bubbleRange = bubbleRange
+    }
+
+    private fun openSearch() {
+        findNavController().navigate(ScheduleFragmentDirections.toSearch())
     }
 }
