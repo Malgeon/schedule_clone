@@ -80,6 +80,10 @@ dependencies {
     kapt(Libs.HILT_COMPILER)
     kaptAndroidTest(Libs.HILT_COMPILER)
 
+    // Glide
+    implementation(Libs.GLIDE)
+    kapt(Libs.GLIDE_COMPILER)
+
 
     testImplementation("junit:junit:4.+")
     androidTestImplementation("androidx.test.ext:junit:1.1.3")
