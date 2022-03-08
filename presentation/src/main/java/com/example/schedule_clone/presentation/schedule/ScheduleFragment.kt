@@ -11,12 +11,15 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.RecyclerView
 import com.example.schedule_clone.domain.sessions.ConferenceDayIndexer
 import com.example.schedule_clone.model.ConferenceDay
+import com.example.schedule_clone.presentation.R
 import com.example.schedule_clone.presentation.databinding.FragmentScheduleBinding
 import com.example.schedule_clone.presentation.sessioncommon.SessionsAdapter
 import com.example.schedule_clone.presentation.util.launchAndRepeatWithViewLifecycle
 import com.example.schedule_clone.presentation.widget.BubbleDecoration
 import com.example.schedule_clone.presentation.widget.FadingSnackbar
+import com.example.schedule_clone.shared.analytics.AnalyticsActions
 import com.example.schedule_clone.shared.analytics.AnalyticsHelper
+import com.example.schedule_clone.shared.di.SearchScheduleEnabledFlag
 import com.example.schedule_clone.shared.util.TimeUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -39,6 +42,11 @@ class ScheduleFragment : Fragment() {
     @Inject
     @field:Named("tagViewPool")
     lateinit var tagViewPool: RecyclerView.RecycledViewPool
+
+    @Inject
+    @JvmField
+    @SearchScheduleEnabledFlag
+    var searchScheduleFeatureEnabled: Boolean = false
 
     private val scheduleViewModel: ScheduleViewModel by viewModels()
     private val scheduleTwoPaneViewModel: ScheduleTwoPaneViewModel by activityViewModels()
@@ -74,6 +82,23 @@ class ScheduleFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Set up search menu item
+        binding.toolbar.run {
+            inflateMenu(R.menu.schedule_menu)
+            menu.findItem(R.id.search).isVisible = searchScheduleFeatureEnabled
+            setOnMenuItemClickListener { item ->
+                if (item.itemId == R.id.search) {
+                    analyticsHelper.logUiEvent("Navigation to Search", AnalyticsActions.CLICK)
+                    openSearch()
+                    true
+                } else {
+                    false
+                }
+            }
+        }
+
+        binding.toolbar.setupProfileMenuItem
 
         // Session list configuration
         sessionsAdapter = SessionsAdapter(
