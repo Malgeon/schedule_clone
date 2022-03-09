@@ -9,6 +9,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.schedule_clone.domain.sessions.ConferenceDayIndexer
 import com.example.schedule_clone.model.ConferenceDay
@@ -170,6 +171,25 @@ class ScheduleFragment : Fragment() {
         dayIndicatorAdapter.submitList(indicators)
         dayIndicatorItemDecoration.bubbleRange = bubbleRange
     }
+
+    private fun onScheduleScrolled() {
+        val layoutManager = (scheduleRecyclerView.layoutManager) as LinearLayoutManager
+        val first = layoutManager.findFirstVisibleItemPosition()
+        val last = layoutManager.findLastVisibleItemPosition()
+        if (first < 0 || last < 0) {
+            // When the list is empty, we get -1 for the positions.
+            return
+        }
+
+        val firstDay = dayIndexer.dayForPosition(first) ?: return
+        val lastDay = dayIndexer.dayForPosition(last) ?: return
+        val highlightRange = dayIndexer.days.indexOf(firstDay)..dayIndexer.days.indexOf(lastDay)
+        if (highlightRange != cachedBubbleRange) {
+            cachedBubbleRange = highlightRange
+            rebuildDayIndicators()
+        }
+    }
+
 
     private fun openSearch() {
         findNavController().navigate(ScheduleFragmentDirections.toSearch())
