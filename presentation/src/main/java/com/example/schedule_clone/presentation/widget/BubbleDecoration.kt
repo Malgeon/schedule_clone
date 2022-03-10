@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import androidx.recyclerview.widget.RecyclerView.State
 import com.example.schedule_clone.presentation.R
 import com.example.schedule_clone.presentation.util.lerp
+import kotlin.math.max
 import kotlin.math.min
 
 /**
@@ -106,7 +107,7 @@ class BubbleDecoration(context: Context) : ItemDecoration() {
             lerp(initial.left, target.left, progress),
             lerp(initial.top, target.top, progress),
             lerp(initial.right, target.right, progress),
-            lerp(initial.bottom, target.bottom, progress),
+            lerp(initial.bottom, target.bottom, progress)
         )
     }
 
@@ -133,9 +134,9 @@ class BubbleDecoration(context: Context) : ItemDecoration() {
             val position = parent.getChildViewHolder(view).adapterPosition
             if (position != -1 && position in range && seenPositions.add(position)) {
                 minLeft = min(minLeft, view.left.toFloat())
-                minTop = min(minTop, view.left.toFloat())
-                maxRight = min(maxRight, view.left.toFloat())
-                maxBottom = min(maxBottom, view.left.toFloat())
+                minTop = min(minTop, view.top.toFloat())
+                maxRight = max(maxRight, view.right.toFloat())
+                maxBottom = max(maxBottom, view.bottom.toFloat())
             }
         }
 

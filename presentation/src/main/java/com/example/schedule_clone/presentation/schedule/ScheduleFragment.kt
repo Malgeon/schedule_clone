@@ -18,6 +18,7 @@ import com.example.schedule_clone.presentation.R
 import com.example.schedule_clone.presentation.databinding.FragmentScheduleBinding
 import com.example.schedule_clone.presentation.sessioncommon.SessionsAdapter
 import com.example.schedule_clone.presentation.signin.setupProfileMenuItem
+import com.example.schedule_clone.presentation.util.executeAfter
 import com.example.schedule_clone.presentation.util.launchAndRepeatWithViewLifecycle
 import com.example.schedule_clone.presentation.widget.BubbleDecoration
 import com.example.schedule_clone.presentation.widget.FadingSnackbar
@@ -113,8 +114,8 @@ class ScheduleFragment : Fragment() {
             scheduleViewModel.showReservations,
             scheduleViewModel.timeZoneId,
             viewLifecycleOwner,
-            scheduleTwoPaneViewModel,
-            scheduleTwoPaneViewModel
+            scheduleTwoPaneViewModel, // OnSessionClickListener
+            scheduleTwoPaneViewModel // OnSessionStarClickListener
         )
         scheduleRecyclerView.apply {
             adapter = sessionsAdapter
@@ -137,6 +138,8 @@ class ScheduleFragment : Fragment() {
             })
         }
 
+        scheduleScroller = JumpSmoothScroller(view.context)
+
         dayIndicatorItemDecoration = BubbleDecoration(view.context)
         dayIndicatorRecyclerView.addItemDecoration(dayIndicatorItemDecoration)
 
@@ -149,7 +152,24 @@ class ScheduleFragment : Fragment() {
                 scheduleViewModel.scheduleUiData.collect { updateScheduleUi(it) }
             }
 
-
+            // During conference, scroll to current event.
+            launch {
+                scheduleViewModel.scrollToEvent.collect { scrollEvent ->
+                    if (scrollEvent.targetPosition != -1) {
+                        scheduleRecyclerView.run {
+                            post {
+                                val lm = layoutManager as LinearLayoutManager
+                                if (scrollEvent.smoothScroll) {
+                                    scheduleScroller.targetPosition = scrollEvent.targetPosition
+                                    lm.startSmoothScroll(scheduleScroller)
+                                } else {
+                                    lm.scrollToPositionWithOffset(scrollEvent.targetPosition, 0)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -173,6 +193,10 @@ class ScheduleFragment : Fragment() {
 
         scheduleRecyclerView.run {
             // Recreate the decoration used for the sticky time headers
+        }
+
+        binding.executeAfter {
+            isEmpty = list.isEmpty()
         }
     }
 
