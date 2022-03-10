@@ -23,15 +23,19 @@ open class LoadScheduleUserSessionsUseCase @Inject constructor(
     private val userEventRepository: DefaultSessionAndUserEventRepository,
     @IoDispatcher dispatcher: CoroutineDispatcher
 ) : FlowUseCase<LoadScheduleUserSessionsParameters, LoadScheduleUserSessionsResult>(dispatcher) {
-    override fun execute(parameters: LoadScheduleUserSessionsParameters): Flow<Result<LoadScheduleUserSessionsResult>> {
+
+    override fun execute(
+        parameters: LoadScheduleUserSessionsParameters
+    ): Flow<Result<LoadScheduleUserSessionsResult>> {
         Timber.d("LoadFilteredUserSessionsUseCase: Refreshing sessions with user data")
         return userEventRepository.getObservableUserEvents(parameters.userId).map { result ->
             when (result) {
                 is Result.Success -> {
                     val sortedSessions = result.data.userSessions
+                        .sortedWith(compareBy({ it.session.startTime }, { it.session.type }))
 
                     // Compute type from tags now so it's done in the background
-                    sortedSessions.forEach { it.session.type}
+                    sortedSessions.forEach { it.session.type }
 
                     val usecaseResult = LoadScheduleUserSessionsResult(
                         userSessions = sortedSessions,
