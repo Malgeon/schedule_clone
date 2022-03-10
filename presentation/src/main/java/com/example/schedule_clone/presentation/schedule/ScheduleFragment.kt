@@ -21,6 +21,7 @@ import com.example.schedule_clone.presentation.signin.setupProfileMenuItem
 import com.example.schedule_clone.presentation.util.launchAndRepeatWithViewLifecycle
 import com.example.schedule_clone.presentation.widget.BubbleDecoration
 import com.example.schedule_clone.presentation.widget.FadingSnackbar
+import com.example.schedule_clone.presentation.widget.JumpSmoothScroller
 import com.example.schedule_clone.shared.analytics.AnalyticsActions
 import com.example.schedule_clone.shared.analytics.AnalyticsHelper
 import com.example.schedule_clone.shared.di.SearchScheduleEnabledFlag
@@ -60,6 +61,7 @@ class ScheduleFragment : Fragment() {
 
     private lateinit var scheduleRecyclerView: RecyclerView
     private lateinit var sessionsAdapter: SessionsAdapter
+    private lateinit var scheduleScroller: JumpSmoothScroller
 
     private lateinit var dayIndicatorRecyclerView: RecyclerView
     private lateinit var dayIndicatorAdapter: DayIndicatorAdapter
@@ -135,10 +137,19 @@ class ScheduleFragment : Fragment() {
             })
         }
 
+        dayIndicatorItemDecoration = BubbleDecoration(view.context)
+        dayIndicatorRecyclerView.addItemDecoration(dayIndicatorItemDecoration)
+
+        dayIndicatorAdapter = DayIndicatorAdapter(scheduleViewModel, viewLifecycleOwner)
+        dayIndicatorRecyclerView.adapter = dayIndicatorAdapter
+
+        // Start observing ViewModels
         launchAndRepeatWithViewLifecycle {
             launch {
                 scheduleViewModel.scheduleUiData.collect { updateScheduleUi(it) }
             }
+
+
         }
     }
 
