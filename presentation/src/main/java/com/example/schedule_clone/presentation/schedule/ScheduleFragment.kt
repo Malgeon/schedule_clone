@@ -5,6 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.doOnNextLayout
+import androidx.core.view.updatePadding
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -18,6 +21,8 @@ import com.example.schedule_clone.presentation.R
 import com.example.schedule_clone.presentation.databinding.FragmentScheduleBinding
 import com.example.schedule_clone.presentation.sessioncommon.SessionsAdapter
 import com.example.schedule_clone.presentation.signin.setupProfileMenuItem
+import com.example.schedule_clone.presentation.util.clearDecorations
+import com.example.schedule_clone.presentation.util.doOnApplyWindowInsets
 import com.example.schedule_clone.presentation.util.executeAfter
 import com.example.schedule_clone.presentation.util.launchAndRepeatWithViewLifecycle
 import com.example.schedule_clone.presentation.widget.BubbleDecoration
@@ -108,6 +113,14 @@ class ScheduleFragment : Fragment() {
 
         binding.toolbar.setupProfileMenuItem(mainActivityViewModel, this)
 
+        // Pad the bottom of the RecyclerView so that the content scrolls up above the nav bar
+        binding.recyclerviewSchedule.doOnApplyWindowInsets { v, insets, padding ->
+            val systemInsets = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.ime()
+            )
+            v.updatePadding(bottom = padding.bottom + systemInsets.bottom)
+        }
+
         // Session list configuration
         sessionsAdapter = SessionsAdapter(
             tagViewPool,
@@ -193,6 +206,12 @@ class ScheduleFragment : Fragment() {
 
         scheduleRecyclerView.run {
             // Recreate the decoration used for the sticky time headers
+            clearDecorations()
+            if (list.isNotEmpty()) {
+                addItemDecoration(
+                    SchduleTime
+                )
+            }
         }
 
         binding.executeAfter {

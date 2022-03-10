@@ -37,8 +37,8 @@
         android:layout_height="wrap_content"
         android:background="?selectableItemBackground"
         android:onClick="@{() -> sessionClickListener.openEventDetail(userSession.session.id)}"
-        android:paddingBottom="@dimen/schedule_item_padding_vertical"
         android:paddingTop="@dimen/schedule_item_padding_vertical"
+        android:paddingBottom="@dimen/schedule_item_padding_vertical"
         tools:targetApi="o">
 
         <androidx.constraintlayout.widget.Guideline
@@ -87,9 +87,9 @@
             android:drawablePadding="@dimen/spacing_normal"
             android:gravity="center_vertical"
             android:textAppearance="@style/TextAppearance.IOSched.ReservationStatus"
+            app:isReservable="@{userSession.session.isReservable}"
             app:layout_constraintStart_toEndOf="@id/guideline_start"
             app:layout_constraintTop_toBottomOf="@id/title"
-            app:isReservable="@{userSession.session.isReservable}"
             app:reservationStatus="@{userSession.userEvent}"
             app:showReservations="@{showReservations}"
             tools:drawableStart="@drawable/ic_reserved"
@@ -103,11 +103,11 @@
             android:layout_marginEnd="14dp"
             android:importantForAccessibility="no"
             android:scaleType="centerCrop"
+            app:goneUnless="@{userSession.session.isLivestream}"
             app:layout_constraintBottom_toTopOf="@id/tags_barrier"
             app:layout_constraintEnd_toStartOf="@id/length_location"
             app:layout_constraintStart_toEndOf="@id/guideline_start"
             app:layout_constraintTop_toBottomOf="@id/reservation_status"
-            app:goneUnless="@{userSession.session.isLivestream}"
             app:srcCompat="@drawable/ic_livestreamed" />
 
         <TextView
@@ -119,9 +119,9 @@
             app:layout_constraintEnd_toStartOf="@id/guideline_end"
             app:layout_constraintStart_toEndOf="@id/livestream_icon"
             app:layout_constraintTop_toBottomOf="@id/reservation_status"
-            app:showTime="@{showTime}"
             app:sessionRoom="@{userSession.session.room}"
             app:sessionStart="@{userSession.session.startTime}"
+            app:showTime="@{showTime}"
             app:timeZoneId="@{timeZoneId}"
             tools:text="May 7 / Amphitheatre" />
 
