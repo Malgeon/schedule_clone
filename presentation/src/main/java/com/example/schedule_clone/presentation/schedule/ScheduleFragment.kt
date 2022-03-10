@@ -123,6 +123,16 @@ class ScheduleFragment : Fragment() {
                 changeDuration = 160L
                 removeDuration = 120L
             }
+
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    onScheduleScrolled()
+                }
+
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    scheduleViewModel.userHasInteracted = true
+                }
+            })
         }
 
         launchAndRepeatWithViewLifecycle {
