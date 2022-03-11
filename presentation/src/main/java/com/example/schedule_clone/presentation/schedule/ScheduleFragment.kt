@@ -209,7 +209,14 @@ class ScheduleFragment : Fragment() {
             clearDecorations()
             if (list.isNotEmpty()) {
                 addItemDecoration(
-                    SchduleTime
+                    ScheduleTimeHeadersDecoration(
+                        context, list.map { it.session }, timeZoneId
+                    )
+                )
+                addItemDecoration(
+                    DaySeparatorItemDecoration(
+                        context, indexer, timeZoneId
+                    )
                 )
             }
         }
