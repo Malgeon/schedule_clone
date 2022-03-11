@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
 import com.example.schedule_clone.domain.sessions.ConferenceDayIndexer
 import com.example.schedule_clone.model.ConferenceDay
 import com.example.schedule_clone.presentation.MainActivityViewModel
@@ -21,10 +22,7 @@ import com.example.schedule_clone.presentation.R
 import com.example.schedule_clone.presentation.databinding.FragmentScheduleBinding
 import com.example.schedule_clone.presentation.sessioncommon.SessionsAdapter
 import com.example.schedule_clone.presentation.signin.setupProfileMenuItem
-import com.example.schedule_clone.presentation.util.clearDecorations
-import com.example.schedule_clone.presentation.util.doOnApplyWindowInsets
-import com.example.schedule_clone.presentation.util.executeAfter
-import com.example.schedule_clone.presentation.util.launchAndRepeatWithViewLifecycle
+import com.example.schedule_clone.presentation.util.*
 import com.example.schedule_clone.presentation.widget.BubbleDecoration
 import com.example.schedule_clone.presentation.widget.FadingSnackbar
 import com.example.schedule_clone.presentation.widget.JumpSmoothScroller
@@ -52,7 +50,7 @@ class ScheduleFragment : Fragment() {
 
     @Inject
     @field:Named("tagViewPool")
-    lateinit var tagViewPool: RecyclerView.RecycledViewPool
+    lateinit var tagViewPool: RecycledViewPool
 
     @Inject
     @JvmField
@@ -149,6 +147,9 @@ class ScheduleFragment : Fragment() {
                     scheduleViewModel.userHasInteracted = true
                 }
             })
+        }
+        binding.swipeRefreshLayout.doOnNextLayout {
+            setContentMaxWidth(it)
         }
 
         scheduleScroller = JumpSmoothScroller(view.context)
