@@ -54,12 +54,17 @@
                         android:layout_weight="3"
                         android:layout="@layout/search_active_filters_wide"
                         app:viewModel="@{viewModel}"/>
-
                 </LinearLayout>
-
 
             </androidx.appcompat.widget.Toolbar>
 
+            <ViewStub
+                android:id="@+id/active_filters_narrow_stub"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout="@layout/search_active_filters_narrow"
+                app:viewModel="@{viewModel}"
+                tools:visibility="visible" />
         </com.google.android.material.appbar.AppBarLayout>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
