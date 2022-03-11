@@ -52,8 +52,6 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":data"))
 
-
-    implementation(Libs.CORE_KTX)
     implementation(Libs.APP_STARTUP)
 
     implementation(Libs.ACTIVITY_KTX)

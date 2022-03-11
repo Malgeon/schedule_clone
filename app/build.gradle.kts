@@ -49,7 +49,6 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":shared"))
 
-    implementation(Libs.CORE_KTX)
     implementation(Libs.APP_STARTUP)
 
     // Date and time API for Java.

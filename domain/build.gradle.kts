@@ -40,7 +40,7 @@ dependencies {
     // Coroutines
     api(Libs.COROUTINES)
 
-    implementation(Libs.CORE_KTX)
+    api(Libs.CORE_KTX)
 
     // Dagger Hilt
     implementation(Libs.HILT_ANDROID)
