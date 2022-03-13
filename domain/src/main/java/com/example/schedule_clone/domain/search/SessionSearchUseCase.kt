@@ -23,6 +23,7 @@ class SessionSearchUseCase @Inject constructor(
 ) : FlowUseCase<SessionSearchUseCaseParams, List<UserSession>>(dispatcher) {
 
     override fun execute(parameters: SessionSearchUseCaseParams): Flow<Result<List<UserSession>>> {
+
         TODO("Not yet implemented")
     }
 }
