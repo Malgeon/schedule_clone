@@ -91,9 +91,29 @@ class FiltersViewModelDelegateImpl(
             throw IllegalArgumentException("Unsupported filter: $filter")
         }
         val changed = if (enabled) {
-
+            _selectedFiltersList.add(filter)
+        } else {
+            _selectedFiltersList.remove(filter)
         }
+        if (changed) {
+            _selectedFilterChipsList =
+                _selectedFiltersList.mapTo(mutableListOf()) { it.asChip(true) }
+            val index = _filterChipsList.indexOfFirst { it.filter == filter }
+            _filterChipsList[index] = filter.asChip(enabled)
 
+            publish(true)
+        }
     }
 
+    override fun clearFilters() {
+        if (_selectedFiltersList.isNotEmpty()) {
+            _selectedFiltersList.clear()
+            _selectedFilterChipsList.clear()
+            _filterChipsList = _filterChipsList.mapTo(mutableListOf()) {
+                if (it.isSelected) it.copy(isSelected = false) else it
+            }
+
+            publish(true)
+        }
+    }
 }
