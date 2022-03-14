@@ -1,6 +1,7 @@
 package com.example.schedule_clone.presentation.search
 
 import androidx.lifecycle.ViewModel
+import com.example.schedule_clone.domain.search.LoadSearchFiltersUseCase
 import com.example.schedule_clone.domain.search.SessionSearchUseCase
 import com.example.schedule_clone.domain.settings.GetTimeZoneUseCase
 import com.example.schedule_clone.model.userdata.UserSession
