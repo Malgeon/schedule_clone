@@ -1,5 +1,6 @@
 package com.example.schedule_clone.domain.search
 
+import androidx.core.os.trace
 import com.example.schedule_clone.data.db.AppDatabase
 import com.example.schedule_clone.model.userdata.UserSession
 import javax.inject.Inject
@@ -15,7 +16,16 @@ object SimpleMatchStrategy : SessionTextMatchStrategy {
         userSessions: List<UserSession>,
         query: String
     ): List<UserSession> {
-        TODO("Not yet implemented")
+        trace("search-path-simplematchstrategy") {
+            if (query.isEmpty()) {
+                return userSessions
+            }
+            val lowercaseQuery = query.toLowerCase()
+            return userSessions.filter {
+                it.session.title.toLowerCase().contains(lowercaseQuery) ||
+                        it.session.description.toLowerCase().contains(lowercaseQuery)
+            }
+        }
     }
 }
 
@@ -28,6 +38,14 @@ class FtsMatchStrategy @Inject constructor(
         userSessions: List<UserSession>,
         query: String
     ): List<UserSession> {
-        TODO("Not yet implemented")
+        trace("search-path-ftsmatchstrategy") {
+            if (query.isEmpty()) {
+                return userSessions
+            }
+            val sessionIds = trace("search-path-roomquery") {
+                appDatabase.sessionFtsDao().searchAllSessions(query.toLowerCase()).toSet()
+            }
+            return userSessions.filter { it.session.id in sessionIds }
+        }
     }
 }
