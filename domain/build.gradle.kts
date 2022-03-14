@@ -51,6 +51,11 @@ dependencies {
     implementation(Libs.LIFECYCLE_RUNTIME_KTX)
     kapt(Libs.LIFECYCLE_COMPILER)
 
+    // Architecture Components
+    implementation(Libs.ROOM_KTX)
+    implementation(Libs.ROOM_RUNTIME)
+    kapt(Libs.ROOM_COMPILER)
+
     // Utils
     api(Libs.TIMBER)
 }
