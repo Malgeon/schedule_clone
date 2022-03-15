@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.example.schedule_clone.presentation.filters.FiltersViewModelDelegate" />
+
+        <variable
+            name="contentAlpha"
+            type="androidx.databinding.ObservableFloat" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/filter_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/colorSurface"
+        android:clickable="true"
+        android:elevation="@dimen/bottom_sheet_elevation"
+        android:focusable="true"
+        tools:ignore="Overdraw">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guide_header_height"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="@dimen/schedule_bottom_sheet_peek_height" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
