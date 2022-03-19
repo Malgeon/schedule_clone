@@ -91,7 +91,32 @@
             android:alpha="@{contentAlpha}"
             android:clickable="@{contentAlpha > 0f}"
             android:minWidth="0dp"
+            android:onClick="@{() -> viewModel.clearFilters()}"
+            android:paddingStart="@dimen/margin_normal"
+            android:paddingEnd="@dimen/margin_normal"
+            android:text="@string/reset"
+            app:goneUnless="@{viewModel.hasAnyFilters}"
+            app:layout_constraintBottom_toTopOf="@id/guide_header_height"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:targetApi="o"
+            tools:visibility="visible" />
 
+        <ImageButton
+            android:id="@+id/collapse_arrow"
+            android:layout_width="@dimen/a11y_min_touch_target"
+            android:layout_height="@dimen/a11y_min_touch_target"
+            android:layout_marginEnd="@dimen/margin_small"
+            android:alpha="@{contentAlpha}"
+            android:background="?selectableItemBackgroundBorderless"
+            android:clickable="@{contentAlpha > 0f}"
+            android:contentDescription="@string/a11y_collapse_filters_sheet"
+            android:scaleType="center"
+            app:layout_constraintBottom_toTopOf="@id/guide_header_height"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_expand_more"
+            app:tint="?attr/colorControlNormal" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
