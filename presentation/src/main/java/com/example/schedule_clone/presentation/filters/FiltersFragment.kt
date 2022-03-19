@@ -4,7 +4,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.databinding.ObservableFloat
 import androidx.fragment.app.Fragment
 import com.example.schedule_clone.presentation.databinding.FragmentFiltersBinding
-import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.example.schedule_clone.presentation.widget.BottomSheetBehavior
 
 /**
  * Fragment that shows the list of filters for teh Schedule

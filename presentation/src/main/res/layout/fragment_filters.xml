@@ -118,6 +118,5 @@
             app:srcCompat="@drawable/ic_expand_more"
             app:tint="?attr/colorControlNormal" />
 
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
