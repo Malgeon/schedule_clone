@@ -6,10 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
 import androidx.activity.OnBackPressedCallback
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.marginBottom
-import androidx.core.view.updateLayoutParams
-import androidx.core.view.updatePadding
+import androidx.core.view.*
 import androidx.databinding.ObservableFloat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
@@ -17,12 +14,15 @@ import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import com.example.schedule_clone.presentation.R
 import com.example.schedule_clone.presentation.databinding.FragmentFiltersBinding
 import com.example.schedule_clone.presentation.util.doOnApplyWindowInsets
+import com.example.schedule_clone.presentation.util.launchAndRepeatWithViewLifecycle
+import com.example.schedule_clone.presentation.util.slideOffsetToAlpha
 import com.example.schedule_clone.presentation.widget.BottomSheetBehavior
 import com.example.schedule_clone.presentation.widget.BottomSheetBehavior.BottomSheetCallback
-import com.example.schedule_clone.presentation.widget.BottomSheetBehavior.STATE_COLLAPSED
-import com.example.schedule_clone.presentation.widget.BottomSheetBehavior.STATE_EXPANDED
-import com.example.schedule_clone.presentation.widget.BottomSheetBehavior.STATE_HIDDEN
+import com.example.schedule_clone.presentation.widget.BottomSheetBehavior.Companion.STATE_COLLAPSED
+import com.example.schedule_clone.presentation.widget.BottomSheetBehavior.Companion.STATE_EXPANDED
+import com.example.schedule_clone.presentation.widget.BottomSheetBehavior.Companion.STATE_HIDDEN
 import com.google.android.flexbox.FlexboxItemDecoration
+import kotlinx.coroutines.flow.collect
 
 /**
  * Fragment that shows the list of filters for teh Schedule
@@ -130,14 +130,68 @@ abstract class FiltersFragment : Fragment() {
 
         behavior.addBottomSheetCallback(object : BottomSheetCallback {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                updateFilterCon
+
+            }
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+
             }
         })
+
+        binding.collapseArrow.setOnClickListener {
+            behavior.state = if (behavior.skipCollapsed) STATE_HIDDEN else STATE_COLLAPSED
+        }
+
+        binding.filterSheet.doOnLayout {
+            val slideOffset = when (behavior.state) {
+                STATE_HIDDEN -> 1f
+                STATE_COLLAPSED -> 0f
+                else /*BottomSheetBehavior.STATE_HIDDEN*/ -> -1f
+            }
+            updateFilterContentsAlpha(slideOffset)
+        }
+
+        if (pendingSheetState != -1) {
+            behavior.state = pendingSheetState
+            pendingSheetState -1
+        }
+
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        launchAndRepeatWithViewLifecycle {
+            viewModel.filterChips.collect {
+                filterAdapter.submitFilterList(it)
+            }
+        }
     }
 
     private fun updateFilterContentsAlpha(slideOffset: Float) {
-
+        // Since the content is visible behind the navigation bar, apply a short alpha transition.
+        contentAlpha.set(
+            slideOffsetToAlpha(slideOffset, ALPHA_CONTENT_START, ALPHA_CONTENT_END)
+        )
     }
 
+    private fun updateBackPressedCallbackEnabled(state: Int) {
+        backPressedCallback.isEnabled = !(state == STATE_COLLAPSED || state == STATE_HIDDEN)
+    }
 
+    fun showFiltersSheet() {
+        if (::behavior.isInitialized) {
+            behavior.state = STATE_EXPANDED
+        } else {
+            pendingSheetState = STATE_EXPANDED
+        }
+    }
+
+    fun hideFiltersSheet() {
+        if (::behavior.isInitialized) {
+            behavior.state = STATE_HIDDEN
+        } else {
+            pendingSheetState = STATE_HIDDEN
+        }
+    }
 }

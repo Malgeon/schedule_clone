@@ -10,6 +10,15 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 /**
+ * Map a slideOffset (in the range `[-1, 1]`) to an alpha value based on the desired range.
+ * For example, `slideOffsetToAlpha(0.5, 0.25, 1) = 0.33` because 0.5 is 1/3 of the way between
+ * 0.25 and 1. The result value is additionally clamped to the range `[0. 1]`.
+ */
+fun slideOffsetToAlpha(value: Float, rangeMin: Float, rangeMax: Float): Floay {
+    return ((value - rangeMin) / (rangeMax - rangeMin)).coerceIn(0f, 1f)
+}
+
+/**
  * Launches a new coroutine and repeats 'block' every time the Fragment's viewLifecycleOwner
  * is in and out of 'minActiveState' lifecycle state
  */
