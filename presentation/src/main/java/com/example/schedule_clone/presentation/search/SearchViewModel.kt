@@ -10,6 +10,7 @@ import com.example.schedule_clone.presentation.signin.SignInViewModelDelegate
 import com.example.schedule_clone.shared.analytics.AnalyticsHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,5 +26,9 @@ class SearchViewModel @Inject constructor(
     FiltersViewModelDelegate by filtersViewModelDelegate {
 
     private val _searchResults = MutableStateFlow<List<UserSession>>(emptyList())
+    val searchResults: StateFlow<List<UserSession>> = _searchResults
+
+    private val _isEmpty = MutableStateFlow(true)
+    val isEmpty: StateFlow<Boolean> = _isEmpty
 
 }
