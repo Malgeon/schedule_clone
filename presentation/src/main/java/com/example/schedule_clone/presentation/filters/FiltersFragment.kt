@@ -86,6 +86,7 @@ abstract class FiltersFragment : Fragment() {
             )
             v.updatePadding(bottom = padding.bottom + systemInsets.bottom)
         }
+
         return binding.root
     }
 
@@ -125,16 +126,18 @@ abstract class FiltersFragment : Fragment() {
             // Update the peek height so that it is above the navigation bar
             behavior.peekHeight = gestureInsets.bottom + peekHeight
 
-            v.updateLayoutParams<MarginLayoutParams> {  }
+            v.updateLayoutParams<MarginLayoutParams> {
+                bottomMargin = marginBottom + gestureInsets.top
+            }
         }
 
         behavior.addBottomSheetCallback(object : BottomSheetCallback {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-
+                updateFilterContentsAlpha(slideOffset)
             }
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
-
+                updateBackPressedCallbackEnabled(newState)
             }
         })
 
@@ -155,7 +158,7 @@ abstract class FiltersFragment : Fragment() {
             behavior.state = pendingSheetState
             pendingSheetState -1
         }
-
+        updateBackPressedCallbackEnabled(behavior.state)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
