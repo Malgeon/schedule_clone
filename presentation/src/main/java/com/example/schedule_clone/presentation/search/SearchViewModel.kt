@@ -76,6 +76,11 @@ class SearchViewModel @Inject constructor(
         if (textQuery.isEmpty() && filters.isEmpty()) {
             clearSearchResults()
         }
+
+        searchJob = viewModelScope.launch {
+            // The user could be typing or toggling filters rapidly. Giving the search job
+            // a slight delay and cancelling it on each call to this method effectively debounces.
+        }
     }
 
     private fun clearSearchResults() {
@@ -96,5 +101,4 @@ class SearchViewModel @Inject constructor(
         _showResultCount.value = true
         resultCount.value = sessions.size
     }
-
 }
