@@ -1,13 +1,16 @@
 package com.example.schedule_clone.presentation.search
 
+import androidx.core.os.trace
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.schedule_clone.domain.search.LoadSearchFiltersUseCase
 import com.example.schedule_clone.domain.search.SessionSearchUseCase
+import com.example.schedule_clone.domain.search.SessionSearchUseCaseParams
 import com.example.schedule_clone.domain.settings.GetTimeZoneUseCase
 import com.example.schedule_clone.model.userdata.UserSession
 import com.example.schedule_clone.presentation.filters.FiltersViewModelDelegate
 import com.example.schedule_clone.presentation.signin.SignInViewModelDelegate
+import com.example.schedule_clone.shared.analytics.AnalyticsActions
 import com.example.schedule_clone.shared.analytics.AnalyticsHelper
 import com.example.schedule_clone.shared.result.Result
 import com.example.schedule_clone.shared.result.Result.Loading
@@ -15,6 +18,7 @@ import com.example.schedule_clone.shared.result.successOr
 import com.example.schedule_clone.shared.util.TimeUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import org.threeten.bp.ZoneId
@@ -66,6 +70,23 @@ class SearchViewModel @Inject constructor(
                 executeSearch()
             }
         }
+
+        // Re-execute search when signed in user changes.
+        // Required because we show star / reservation status.
+        viewModelScope.launch {
+            userInfo.collect {
+                executeSearch()
+            }
+        }
+    }
+
+    fun onSessionQueryChanged(query: String) {
+        val newQuery = query.trim().takeIf { it.length >= 2 } ?: ""
+        if (textQuery != newQuery) {
+            textQuery = newQuery
+            analyticsHelper.logUiEvent("Query: $newQuery", AnalyticsActions.SEARCH_QUERY_SUBMIT)
+            executeSearch()
+        }
     }
 
     private fun executeSearch() {
@@ -75,11 +96,20 @@ class SearchViewModel @Inject constructor(
         val filters = selectedFilters.value
         if (textQuery.isEmpty() && filters.isEmpty()) {
             clearSearchResults()
+            return
         }
 
         searchJob = viewModelScope.launch {
             // The user could be typing or toggling filters rapidly. Giving the search job
             // a slight delay and cancelling it on each call to this method effectively debounces.
+            delay(500)
+            trace("search-path-viewmodel") {
+                searchUseCase(
+                    SessionSearchUseCaseParams(userIdValue, textQuery, filters)
+                ).collect {
+                    processSearchResult(it)
+                }
+            }
         }
     }
 
