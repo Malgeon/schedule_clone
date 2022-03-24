@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-
+    private val test = com.google.android.material.R.styleable.BottomSheetBehavior_Layout
     @Inject
     @JvmField
     @MapFeatureEnabledFlag

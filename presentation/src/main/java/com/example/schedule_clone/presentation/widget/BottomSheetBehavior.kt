@@ -18,7 +18,6 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout.Behavior
 import androidx.core.view.ViewCompat
 import androidx.customview.view.AbsSavedState
 import androidx.customview.widget.ViewDragHelper
-import com.example.schedule_clone.presentation.R
 import com.example.schedule_clone.shared.util.readBooleanUsingCompat
 import com.example.schedule_clone.shared.util.writeBooleanUsingCompat
 import java.lang.ref.WeakReference
@@ -236,20 +235,20 @@ class BottomSheetBehavior<V : View> : Behavior<V> {
     @SuppressLint("PrivateResource")
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
         // Re-use BottomSheetBehavior's attrs
-        val a = context.obtainStyledAttributes(attrs, R.styleable.BottomSheetBehavior_Layout)
-        val value = a.peekValue(R.styleable.BottomSheetBehavior_Layout_behavior_peekHeight)
+        val a = context.obtainStyledAttributes(attrs, com.google.android.material.R.styleable.BottomSheetBehavior_Layout)
+        val value = a.peekValue(com.google.android.material.R.styleable.BottomSheetBehavior_Layout_behavior_peekHeight)
         peekHeight = if (value != null && value.data == PEEK_HEIGHT_AUTO) {
             value.data
         } else {
             a.getDimensionPixelSize(
-                R.styleable.BottomSheetBehavior_Layout_behavior_peekHeight, PEEK_HEIGHT_AUTO
+                com.google.android.material.R.styleable.BottomSheetBehavior_Layout_behavior_peekHeight, PEEK_HEIGHT_AUTO
             )
         }
-        isHideable = a.getBoolean(R.styleable.BottomSheetBehavior_Layout_behavior_hideable, false)
+        isHideable = a.getBoolean(com.google.android.material.R.styleable.BottomSheetBehavior_Layout_behavior_hideable, false)
         isFitToContents =
-            a.getBoolean(R.styleable.BottomSheetBehavior_Layout_behavior_fitToContents, true)
+            a.getBoolean(com.google.android.material.R.styleable.BottomSheetBehavior_Layout_behavior_fitToContents, true)
         skipCollapsed =
-            a.getBoolean(R.styleable.BottomSheetBehavior_Layout_behavior_skipCollapsed, false)
+            a.getBoolean(com.google.android.material.R.styleable.BottomSheetBehavior_Layout_behavior_skipCollapsed, false)
         a.recycle()
         val configuration = ViewConfiguration.get(context)
         minimumVelocity = configuration.scaledMinimumFlingVelocity
@@ -326,7 +325,7 @@ class BottomSheetBehavior<V : View> : Behavior<V> {
                 // init peekHeightMin
                 @SuppressLint("PrivateResource")
                 peekHeightMin = parent.resources.getDimensionPixelSize(
-                    R.dimen.design_bottom_sheet_peek_height_min
+                    com.google.android.material.R.dimen.design_bottom_sheet_peek_height_min
                 )
             }
             lastPeekHeight = Math.max(peekHeightMin, parentHeight - parent.width * 9 / 16)
