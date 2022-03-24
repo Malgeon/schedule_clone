@@ -1,14 +1,16 @@
 package com.example.schedule_clone.presentation.filters
 
+import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.databinding.ktx.BuildConfig
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.schedule_clone.presentation.R
-import com.example.schedule_clone.presentation.SectionHeader
+import com.example.schedule_clone.presentation.databinding.ItemFilterChipSelectableBinding
+import com.example.schedule_clone.presentation.databinding.ItemGenericSectionHeaderBinding
 import com.example.schedule_clone.shared.util.exceptionInDebug
-import java.lang.IllegalArgumentException
-import java.lang.RuntimeException
+import com.example.schedule_clone.presentation.SectionHeader
 
 /** Adapter for selectable filters, e.g. ones shown in the filter sheet. */
 class SelectableFilterChipAdapter(
@@ -16,13 +18,13 @@ class SelectableFilterChipAdapter(
 ) : ListAdapter<Any, ViewHolder>(FilterChipAndHeadingDiff) {
 
     companion object {
-        private const val VIEW_TYPE_HEADING = R.layout.item_generic_section_header
-        private const val VIEW_TYPE_FILTER = R.layout.item_filter_chip_selectable
+        private val VIEW_TYPE_HEADING = R.layout.fading_snackbar_layout
+        private val VIEW_TYPE_FILTER = R.layout.item_filter_chip_selectable
 
         /**
          * Inserts category headings in a list of [FilterChip]s to make a heterogeneous list.
          * Assumes the items are already grouped by [FilterChip.categoryLabel], beginning with
-         * categoryLabel == '0'
+         * categoryLabel == '0'.
          */
         private fun insertCategoryHeadings(list: List<FilterChip>?): List<Any> {
             val newList = mutableListOf<Any>()
@@ -64,8 +66,54 @@ class SelectableFilterChipAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return when (viewType) {
-            VIEW_TYPE_HEADING -> createHeadingViewHolder()
+            VIEW_TYPE_HEADING -> createHeadingViewHolder(parent)
+            VIEW_TYPE_FILTER -> createFilterViewHolder(parent)
+            else -> throw IllegalArgumentException("Unknown item type")
+        }
+    }
 
+    private fun createHeadingViewHolder(parent: ViewGroup): HeadingViewHolder {
+        return HeadingViewHolder(
+            ItemGenericSectionHeaderBinding.inflate(
+                LayoutInflater.from(parent.context), parent, false
+            )
+        )
+    }
+
+    private fun createFilterViewHolder(parent: ViewGroup): FilterViewHolder {
+        val binding = ItemFilterChipSelectableBinding.inflate(
+            LayoutInflater.from(parent.context), parent, false
+        ).apply {
+            viewModel = viewModelDelegate
+        }
+        return FilterViewHolder(binding)
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        when (holder) {
+            is HeadingViewHolder -> holder.bind(getItem(position) as SectionHeader)
+            is FilterViewHolder -> holder.bind(getItem(position) as FilterChip)
+        }
+    }
+
+    /** ViewHolder for category heading items. */
+    class HeadingViewHolder(
+        private val binding: ItemGenericSectionHeaderBinding
+    ) : ViewHolder(binding.root) {
+
+        internal fun bind(item: SectionHeader) {
+            binding.sectionHeader = item
+            binding.executePendingBindings()
+        }
+    }
+
+    /** ViewHolder for [FilterChip] items. */
+    class FilterViewHolder(private val binding: ItemFilterChipSelectableBinding) :
+        ViewHolder(binding.root) {
+
+        internal fun bind(item: FilterChip) {
+            binding.filterChip = item
+            binding.executePendingBindings()
         }
     }
 }

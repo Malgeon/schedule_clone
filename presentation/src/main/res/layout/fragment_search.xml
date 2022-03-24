@@ -122,7 +122,7 @@
             app:behavior_peekHeight="0dp"
             app:behavior_skipCollapsed="true"
             tools:ignore="FragmentTagUsage"
-            tools:layout="@layout/fragment_filters"/>
+            tools:layout="@layout/fragment_filtersg"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
