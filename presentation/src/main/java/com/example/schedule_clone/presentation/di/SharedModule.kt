@@ -30,6 +30,10 @@ import com.example.schedule_clone.domain.fake.FakeConferenceDataSource
 import com.example.schedule_clone.domain.fake.userevent.FakeUserEventDataSource
 import com.example.schedule_clone.domain.fcm.StagingTopicSubscriber
 import com.example.schedule_clone.domain.fcm.TopicSubscriber
+import com.example.schedule_clone.domain.search.FtsMatchStrategy
+import com.example.schedule_clone.domain.search.SessionTextMatchStrategy
+import com.example.schedule_clone.domain.search.SimpleMatchStrategy
+import com.example.schedule_clone.shared.di.SearchUsingRoomEnabledFlag
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -148,12 +152,12 @@ class SharedModule {
 //        return FakeArDebugFlagEndpoint
 //    }
 
-//    @Singleton
-//    @Provides
-//    fun provideSessionTextMatchStrategy(
-//        @SearchUsingRoomEnabledFlag useRoom: Boolean,
-//        appDatabase: AppDatabase
-//    ): SessionTextMatchStrategy {
-//        return if (useRoom) FtsMatchStrategy(appDatabase) else SimpleMatchStrategy
-//    }
+    @Singleton
+    @Provides
+    fun provideSessionTextMatchStrategy(
+        @SearchUsingRoomEnabledFlag useRoom: Boolean,
+        appDatabase: AppDatabase
+    ): SessionTextMatchStrategy {
+        return if (useRoom) FtsMatchStrategy(appDatabase) else SimpleMatchStrategy
+    }
 }
