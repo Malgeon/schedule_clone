@@ -23,6 +23,16 @@ class LoadSearchFiltersUseCase @Inject constructor(
 ) : UseCase<Unit, List<Filter>>(dispatcher) {
 
     override suspend fun execute(parameters: Unit): List<Filter> {
-        TODO("Not yet implemented")
+        val filters = mutableListOf<Filter>()
+        filters.addAll(conferenceRepository.getConferenceDays().map { Filter.DateFilter(it) })
+        filters.addAll(
+            tagRepository.getTags()
+                .filter { it.category in FILTER_CATEGORIES }
+                .sortedWith(
+                    compareBy({ FILTER_CATEGORIES.indexOf(it.category) }, { it.orderInCategory })
+                )
+                .map { Filter.TagFilter(it) }
+        )
+        return filters
     }
 }

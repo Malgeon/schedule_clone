@@ -72,6 +72,11 @@ dependencies {
     implementation(Libs.NAVIGATION_FRAGMENT_KTX)
     implementation(Libs.NAVIGATION_UI_KTX)
 
+    // Architecture Components
+    implementation(Libs.ROOM_KTX)
+    implementation(Libs.ROOM_RUNTIME)
+    kapt(Libs.ROOM_COMPILER)
+
     // Dagger Hilt
     implementation(Libs.HILT_ANDROID)
     androidTestImplementation(Libs.HILT_TESTING)
