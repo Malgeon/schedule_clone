@@ -13,7 +13,7 @@ import androidx.core.view.doOnNextLayout
 import androidx.core.view.updatePadding
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
 import com.example.schedule_clone.presentation.R
 import com.example.schedule_clone.presentation.databinding.FragmentSearchBinding
 import com.example.schedule_clone.presentation.databinding.SearchActiveFiltersNarrowBinding
@@ -37,7 +37,7 @@ class SearchFragment : Fragment() {
 
     @Inject
     @field:Named("tagViewPool")
-    lateinit var tagViewPool: RecyclerView.RecycledViewPool
+    lateinit var tagViewPool: RecycledViewPool
 
     private lateinit var binding: FragmentSearchBinding
 
