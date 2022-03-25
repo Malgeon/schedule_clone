@@ -75,7 +75,6 @@ class SearchFragment : Fragment() {
             }
         }
 
-
         binding.searchView.apply {
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String): Boolean {
