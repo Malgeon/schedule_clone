@@ -80,7 +80,7 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    fun onSessionQueryChanged(query: String) {
+    fun onSearchQueryChanged(query: String) {
         val newQuery = query.trim().takeIf { it.length >= 2 } ?: ""
         if (textQuery != newQuery) {
             textQuery = newQuery

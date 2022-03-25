@@ -13,10 +13,10 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/active_filters"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fadingEdgeLength="12dp"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
         android:orientation="horizontal"
-        android:paddingHorizontal="@dimen/spacing_micro"
+        android:paddingHorizontal="12dp"
         android:paddingVertical="@dimen/spacing_micro"
         android:requiresFadingEdge="horizontal"
         app:activeFilters="@{viewModel.selectedFilterChips}"
@@ -24,7 +24,6 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:viewModel="@{viewModel}"
         tools:itemCount="3"
-        tools:layout_width="match_parent"
-        tools:listitem="@layout/item_filter_chip_closeable" />
-
+        tools:listitem="@layout/item_filter_chip_closeable"
+        tools:visibility="visible" />
 </layout>

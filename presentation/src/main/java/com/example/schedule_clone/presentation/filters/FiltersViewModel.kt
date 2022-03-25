@@ -11,19 +11,14 @@ import kotlinx.coroutines.flow.*
 interface FiltersViewModelDelegate {
     /** The full list of filter chips. */
     val filterChips: Flow<List<FilterChip>>
-
     /** The list of selected filters. */
     val selectedFilters: StateFlow<List<Filter>>
-
     /** The list of selected filter chips. */
     val selectedFilterChips: StateFlow<List<FilterChip>>
-
     /** True if there are any selected filters */
     val hasAnyFilters: StateFlow<Boolean>
-
     /** Number of results from applying filters. Can be set by implementers. */
     val resultCount: MutableStateFlow<Int>
-
     /** Whether to show the result count instead of the "Filters" header. */
     val showResultCount: StateFlow<Boolean>
 
