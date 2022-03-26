@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.schedule_clone.presentation.R
+import com.example.schedule_clone.presentation.widget.SpaceDecoration
 import com.google.android.material.chip.Chip
 
 @BindingAdapter("activeFilters", "viewModel", requireAll = true)
@@ -15,8 +16,18 @@ fun activeFilters(
     filters: List<FilterChip>?,
     viewModel: FiltersViewModelDelegate
 ) {
-//    val filterChipAdapter: CloseableFilterChipAdapter
-
+    val filterChipAdapter: CloseableFilterChipAdapter
+    if (recyclerView.adapter == null) {
+        filterChipAdapter = CloseableFilterChipAdapter(viewModel)
+        recyclerView.apply {
+            adapter = filterChipAdapter
+            val space = resources.getDimensionPixelSize(R.dimen.spacing_micro)
+            addItemDecoration(SpaceDecoration(start = space, end = space))
+        }
+    } else {
+        filterChipAdapter = recyclerView.adapter as CloseableFilterChipAdapter
+    }
+    filterChipAdapter.submitList(filters ?: emptyList())
 }
 
 @BindingAdapter("showResultCount", "resultCount", requireAll = true)
