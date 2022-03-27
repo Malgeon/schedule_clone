@@ -4,6 +4,7 @@ import com.example.schedule_clone.model.filters.Filter
 import com.example.schedule_clone.presentation.util.compatRemoveIf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
+import timber.log.Timber
 
 /**
  * Interface to add filters functionality to a screen through a ViewModel.
@@ -86,8 +87,10 @@ class FiltersViewModelDelegateImpl(
             throw IllegalArgumentException("Unsupported filter: $filter")
         }
         val changed = if (enabled) {
+            Timber.e("Toggle enabled")
             _selectedFiltersList.add(filter)
         } else {
+            Timber.e("Toggle unable")
             _selectedFiltersList.remove(filter)
         }
         if (changed) {
