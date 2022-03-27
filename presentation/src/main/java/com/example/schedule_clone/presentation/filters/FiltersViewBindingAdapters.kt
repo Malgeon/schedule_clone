@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.schedule_clone.presentation.R
 import com.example.schedule_clone.presentation.widget.SpaceDecoration
 import com.google.android.material.chip.Chip
+import timber.log.Timber
 
 @BindingAdapter("activeFilters", "viewModel", requireAll = true)
 fun activeFilters(
@@ -46,9 +47,8 @@ fun filterChipOnClick(
     viewModel: FiltersViewModelDelegate
 ) {
     chip.setOnClickListener {
-        chip.setOnCloseIconClickListener {
-            viewModel.toggleFilter(filterChip.filter, !filterChip.isSelected)
-        }
+        Timber.e("clicked filter chip on click, ${filterChip.isSelected}")
+        viewModel.toggleFilter(filterChip.filter, !filterChip.isSelected)
     }
 }
 
