@@ -47,8 +47,7 @@ fun filterChipOnClick(
     viewModel: FiltersViewModelDelegate
 ) {
     chip.setOnClickListener {
-        Timber.e("clicked filter chip on click, ${filterChip.isSelected}")
-        viewModel.toggleFilter(filterChip.filter, !filterChip.isSelected)
+        viewModel.toggleFilter(filterChip.filter, chip.isChecked)
     }
 }
 

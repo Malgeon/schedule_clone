@@ -2,7 +2,11 @@ package com.example.schedule_clone.presentation.filters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.doOnAttach
+import androidx.core.view.doOnDetach
 import androidx.databinding.ktx.BuildConfig
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -110,6 +114,15 @@ class SelectableFilterChipAdapter(
     /** ViewHolder for [FilterChip] items. */
     class FilterViewHolder(private val binding: ItemFilterChipSelectableBinding) :
         ViewHolder(binding.root) {
+
+        init {
+            itemView.doOnAttach {
+                binding.lifecycleOwner = itemView.findViewTreeLifecycleOwner()
+            }
+            itemView.doOnDetach {
+                binding.lifecycleOwner = null
+            }
+        }
 
         internal fun bind(item: FilterChip) {
             binding.filterChip = item
