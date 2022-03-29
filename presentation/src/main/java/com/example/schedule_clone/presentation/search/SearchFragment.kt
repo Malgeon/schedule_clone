@@ -26,6 +26,7 @@ import com.example.schedule_clone.presentation.util.setContentMaxWidth
 import com.example.schedule_clone.shared.analytics.AnalyticsHelper
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -121,6 +122,9 @@ class SearchFragment : Fragment() {
         launchAndRepeatWithViewLifecycle {
             viewModel.searchResults.collect {
                 sessionsAdapter.submitList(it)
+            }
+            viewModel.selectedFilterChips.collect {
+                Timber.e("$it")
             }
         }
 
