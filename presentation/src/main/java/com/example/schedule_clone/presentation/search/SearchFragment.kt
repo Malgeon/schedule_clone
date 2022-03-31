@@ -26,6 +26,7 @@ import com.example.schedule_clone.presentation.util.setContentMaxWidth
 import com.example.schedule_clone.shared.analytics.AnalyticsHelper
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -137,6 +138,7 @@ class SearchFragment : Fragment() {
         binding.toolbar.doOnNextLayout { toolbar ->
             val threshold =
                 resources.getDimensionPixelSize(R.dimen.active_filters_in_toolbar_threshold)
+            Timber.e("${toolbar.width}")
             if (toolbar.width >= threshold) {
                 binding.activeFiltersWideStub.viewStub?.apply {
                     setOnInflateListener { _, inflated ->
