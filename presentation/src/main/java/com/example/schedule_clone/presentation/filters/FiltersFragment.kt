@@ -27,6 +27,7 @@ import com.example.schedule_clone.presentation.widget.BottomSheetBehavior.Compan
 import com.example.schedule_clone.presentation.widget.BottomSheetBehavior.Companion.STATE_EXPANDED
 import com.example.schedule_clone.presentation.widget.BottomSheetBehavior.Companion.STATE_HIDDEN
 import kotlinx.coroutines.flow.collect
+import timber.log.Timber
 
 abstract class FiltersFragment : Fragment() {
 
@@ -167,6 +168,7 @@ abstract class FiltersFragment : Fragment() {
 
         launchAndRepeatWithViewLifecycle {
             viewModel.filterChips.collect {
+                Timber.e("filterChip = $it")
                 filterAdapter.submitFilterList(it)
             }
         }

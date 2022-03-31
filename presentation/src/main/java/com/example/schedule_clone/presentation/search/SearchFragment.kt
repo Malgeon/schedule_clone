@@ -123,6 +123,9 @@ class SearchFragment : Fragment() {
             viewModel.searchResults.collect {
                 sessionsAdapter.submitList(it)
             }
+            viewModel.selectedFilterChips.collect {
+                Timber.e("$it")
+            }
         }
 
         /* The active filters on Search can appear in one of two places:
