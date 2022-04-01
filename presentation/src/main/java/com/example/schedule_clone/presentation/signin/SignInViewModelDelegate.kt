@@ -108,10 +108,12 @@ internal class FirebaseSignInViewModelDelegate @Inject constructor(
             if (it is Result.Error) {
                 Timber.e(it.exception)
             }
+            Timber.e(it.toString())
             it
         }
 
     override val userInfo: StateFlow<AuthenticatedUserInfo?> = currentFirebaseUser.map {
+        Timber.e("${it.data}")
         (it as? Result.Success)?.data
     }.stateIn(applicationScope, WhileViewSubscribed, null)
 
